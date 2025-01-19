@@ -218,3 +218,15 @@ function testMinimumLength1<T extends { length: number }>(
     return obj;
   }
 }
+
+function testCombine<T>(arr1: T[], arr2: T[]): T[] {
+  return arr1.concat(arr2);
+}
+
+// const arr = testCombine([1, 2, 3], ["hello"]);  // uncomment here
+//                                     ^^^^^^^
+// type 'string' is not assignable to type 'number'
+//
+// Generic 'T' can only denote one type. We could manually specify 'T':
+
+const arr = testCombine<string | number>([1, 2, 3], ["Hello"]);

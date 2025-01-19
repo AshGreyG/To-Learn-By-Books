@@ -51,4 +51,9 @@ fn main() {
 
     // Using 'let' can transform the type of variable.
 
+    // Every value in Rust is of a certain **data type**, which tells Rust what
+    // kind of data is being specified so it knows how to work with that data.
+    // Rust is a **statically typed** language, which means that it must know
+    // the types of all variables
+
 }
