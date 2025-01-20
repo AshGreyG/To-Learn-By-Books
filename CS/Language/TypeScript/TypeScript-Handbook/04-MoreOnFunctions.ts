@@ -230,3 +230,81 @@ function testCombine<T>(arr1: T[], arr2: T[]): T[] {
 // Generic 'T' can only denote one type. We could manually specify 'T':
 
 const arr = testCombine<string | number>([1, 2, 3], ["Hello"]);
+
+function testFilter1<T>(
+  arr: T[],
+  func: (arg: T) => boolean
+): T[] {
+  return arr.filter(func);
+}
+
+// good ^
+
+function testFilter2<T, Func extends (arg: T) => boolean>(
+  arr: T[],
+  func: Func
+): T[] {
+  return arr.filter(func);
+}
+
+// bad ^
+//
+// We have created a type parameter 'Func' that doesn't relate two values.
+// 'Func' doesn't do anything but make the function harder to read and 
+// reason about.
+//
+// Remember, type parameters are for relating the types of multiple values.
+// If a type parameter is only used once in the function signature, it a type
+// parameter is only used once in the function signature.
+
+function testOptionalParameter(x?: number) { }
+testOptionalParameter();    // Ok
+testOptionalParameter(30);  // Ok
+
+// Although the parameter is specified as type 'number', the 'x' parameter will
+// actually have the type 'number | undefined' because unspecified parameters in
+// JavaScript get the value 'undefined'.
+
+function testDefaultParameter(x: number = 10) { }
+
+// Now in the body of 'testDefaultParameter', 'x' will have type 'number' because
+// any 'undefined' argument will be replaced with '10'. Note that when a para-
+// meter is optional, callers can always pass 'undefined', as this simply simulates
+// a "missing" argument.
+
+testDefaultParameter();           // Ok
+testDefaultParameter(10);         // Ok
+testDefaultParameter(undefined);  // Ok
+
+function testForEach<T>(
+  arr: T[], 
+  callback: (arg: T, index?: number) => void
+): void {
+  for (let i = 0; i < arr.length; ++i) {
+    callback(arr[i], i);
+  }
+}
+
+testForEach([1, 2, 3], (a) => console.log(a));
+testForEach([1, 2, 4], (a, i) => console.log(i, a));
+testForEach([1.1, 2.2, 3.2], (a, i) => {
+  console.log(i?.toFixed());
+  
+  // TypeScript will automatically add the '?.'
+  // console.log(i.toFixed()); // uncomment here
+  //             ^
+  // 'i' might be'undefined'
+});
+
+// Some JavaScript functions can be called in a variety of argument
+// counts and types.In TypeScript, we can specify a function that
+// can be called in different ways by writing **overload signatures**.
+// To do this, write some number of function signatures, followed by the
+// body of the function:
+
+function testOverload(timestamp: number): Date;
+function testOverload(m: number, d: number, y: number): Date;
+function testOverload(mOrTimestamp: number, d?: number, y?: number): Date {
+  if (d !== undefined && y !== undefined) {
+  }
+}
