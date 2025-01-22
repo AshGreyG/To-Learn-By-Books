@@ -12,26 +12,29 @@
 #         /   \
 #        /     \
 #      c2       c3
-#     bugFix     ║
+#    bugFix      ▲
+#          \     ║
 #           \    ║
 #            \==c4 <- main* 
 #
 # git merge bugFix
 # Fist 'main' branch points to c3, executing the command above,
 # 'main' branch will point to a commit (c4) that has two parents,
-# and it will contain all the work in the repository now. But
-# 'bugFix' branch hasn't all the work. To let 'bugFix' branch
+# and it will contain all the work in the repository now. 'main'
+# branch will accept the change from 'bugFix' branch.
+
+# But 'bugFix' branch hasn't all the work. To let 'bugFix' branch
 # to also have all the work of this repository, we can use
 #
 # git checkout bugFix
 # git merge main
 
 echo "git branch bugFix"
-echo "git checkout bugFix"
+echo "git checkout bugFix"  # bugFix*
 
 # It can be replaced by 'git checkout -b bugFix'
 
 echo "git commit"
-echo "git checkout main"
+echo "git checkout main"    # main*
 echo "git commit"
 echo "git merge bugFix"

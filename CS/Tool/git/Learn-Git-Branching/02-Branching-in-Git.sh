@@ -18,4 +18,4 @@
 #                 points to the c2
 
 echo "git branch bugFix"
-echo "git checkout bugFix"
+echo "git checkout bugFix"  # bugFix*
