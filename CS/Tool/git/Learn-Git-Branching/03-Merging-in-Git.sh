@@ -26,12 +26,12 @@
 # git checkout bugFix
 # git merge main
 
-git branch bugFix
-git checkout bugFix
+echo "git branch bugFix"
+echo "git checkout bugFix"
 
 # It can be replaced by 'git checkout -b bugFix'
 
-git commit
-git checkout main
-git commit
-git merge bugFix
+echo "git commit"
+echo "git checkout main"
+echo "git commit"
+echo "git merge bugFix"

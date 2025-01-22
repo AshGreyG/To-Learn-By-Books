@@ -15,6 +15,6 @@
 #           ║
 #          c2  <- main*
 
-git commit
-git commit
+echo "git commit"
+echo "git commit"
 

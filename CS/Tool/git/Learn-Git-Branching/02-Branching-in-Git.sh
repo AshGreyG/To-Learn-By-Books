@@ -17,5 +17,5 @@
 #                 We will be on the 'newBranch' and now 'newBranch'
 #                 points to the c2
 
-git branch bugFix
-git checkout bugFix
+echo "git branch bugFix"
+echo "git checkout bugFix"
