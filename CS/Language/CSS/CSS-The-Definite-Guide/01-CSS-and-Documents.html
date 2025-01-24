@@ -1,0 +1,120 @@
+<html>
+<head>
+  <title>Eric's World of Waffles</title>
+  <meta http-equiv="content-type" content="text/html" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="sheet1.css" media="all">
+
+  <!-- external stylesheets -->
+
+  <link rel="stylesheet" type="text/css" href="sheet1.css" title="Default" media="screen">
+  <link rel="stylesheet" type="text/css" href="sheet2.css" title="Default" media="print">
+  <link rel="stylesheet" type="text/css" href="sheet3.css" title="Big Text" media="screen">
+  <link rel="stylesheet" type="text/css" href="sheet4.css" title="Big Text" media="print">
+
+  <!-- 
+    If you give a link with a rel of stylesheet a title, then you are designating that
+    stylesheet as a *preferred stylesheet*. This means that its use is preferred to
+    alternate stylesheets, and it will be used when the document is first displayed.
+  -->
+
+  <style type="text/css">
+    /* These are my styles! Yay! */
+    @import url(sheet2.css);
+
+    /* just like <link>, @import can be used to direct the web browser to load
+     * an external stylesheet and use its styles in the rendering of the HTML
+     * document.
+     */
+
+    @import url(sheet2.css) all;
+    @import url(blueworld.css) screen;
+    @import url(zany.css) print;
+
+    @import url(https://example.org/library/layout.css);
+
+    @import url(print-color.css) print and (color);
+
+    /* CSS requires the '@import' directive to come before any other rules in a
+     * stylesheet. An '@import' that comes after other rules will be ignored
+     * by conforming user agents.
+     */
+
+    /* Each rules have two fundamental parts: the *selector* and the *declaration
+     * block*. The declaration block is composed of one or more *declarations*,
+     * and each declaration is a pairing of a *property* and *value*.
+     */
+    
+    h1 {color: red; background-color: yellow;}
+  /* ▲ ▲  ▲  ▲    ▲                              ▲ */
+  /* ┃ ┃  ┃  ┃    ┃                              ┃ */
+  /* ┃ ┃  ┃  ┃    ┃                              ┃ */
+  /* ┃ ┃  ┃  ┃    Value                          ┃ */
+  /* ┃ ┃  ┃ Declaration                          ┃ */
+  /* ┃ ┃ Property                                ┃ */
+  /* ┃ ┖────────── Declaration Blocker ──────────┚ */
+  /* Selector                                      */
+    
+    /* + The selector, shown on the left side of the rule, defines which piece of
+     *   the document will be affected.
+     * + The right side of the rule contains the declaration block, which is made
+     *   up one or more declarations. Each declaration is a combination of a CSS
+     *   property and a value of that property.
+     */
+    
+    /* -epub-    International Digital Publishing Forum ePub format */
+    /* -moz-     Mozilla-based browsers(e.g. Firefox)               */
+    /* -ms-      Microsoft Internet Explorer                        */
+    /* -o-       Opera-based browsers                               */
+    /* -webkit-  WebKit-based browsers(e.g. Safari and Chrome)      */
+
+    /* These are called *vendor prefix* */
+
+    @media screen {
+      /* Notice that @media projection will be warned in the extension */
+      body {
+        background-color: yellow;
+      }
+    }
+
+    @media print {
+      body {
+        background-color: green;
+      }
+    }
+
+    @media all {
+      body {
+        background-color: red;
+      }
+    }
+
+    /* all     Use in all presentation media.
+     *
+     * print   Use when printing the document for sighted users and also when
+     *         displaying a print preview of the document.
+     *
+     * screen  Use when presenting the document in a screen medium like a desktop
+     *         computer monitor. All web browsers running on such systems are
+     *         screen-medium user agents.
+     */
+
+  </style>
+
+  <!-- 
+    style element 
+    They are referred as the *document stylesheet* or the *embedded stylesheet*
+  -->
+
+</head>
+<body>
+  <h1>Waffles!</h1>
+  <p style="color: gray;">
+
+  <!-- 
+    The style attribute can be associated with any HTML tag whatsoever, except
+    for those tags that are found outside of body: <head> / <body>
+  -->
+    The most wonderful of all breakfast foods is the waffle.
+  </p>
+</body>
+</html>

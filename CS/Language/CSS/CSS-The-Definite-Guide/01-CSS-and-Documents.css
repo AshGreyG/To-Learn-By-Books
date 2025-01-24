@@ -1,0 +1,14 @@
+h1 {
+  color: red;
+}
+
+h2 {
+  color: maroon;
+  background-color: white;
+}
+
+/* This is the external stylesheets.
+ * The filename extension is not required, but some older browsers
+ * won't recognize the file as containing stylesheets unless they
+ * actually end with '.css'.
+ */
