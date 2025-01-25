@@ -32,8 +32,6 @@
 
     @import url(https://example.org/library/layout.css);
 
-    @import url(print-color.css) print and (color);
-
     /* CSS requires the '@import' directive to come before any other rules in a
      * stylesheet. An '@import' that comes after other rules will be ignored
      * by conforming user agents.
@@ -42,6 +40,31 @@
     /* Each rules have two fundamental parts: the *selector* and the *declaration
      * block*. The declaration block is composed of one or more *declarations*,
      * and each declaration is a pairing of a *property* and *value*.
+     */
+
+    @import url(print-color.css) print and (color);
+
+    /* 'and' is the boolean operator in *media query*, to combine different media
+     * features. '(color)' is to check if the device supports color.
+     */
+
+    @import url(print-color.css) print and (color), screen and (color-depth: 8);
+
+    /* 'print-color.css' will be applied if rendering to a color printer *or*
+     * to a sufficiently colorful screen environment.
+     */
+    @media all and (min-resolution: 96dpi) { }
+
+    /* and   Links together two or more media features in such a way that all of
+     *       them must be true for the query to be true.
+     *
+     * not   Negates the entire query such that if all of the conditions are true
+     *       then the stylesheet is *not* applied.
+     *
+     * only  Used to hide a stylesheet from browsers too old to understand media 
+     *       queries. 
+     *
+     * ,     (= or)
      */
     
     h1 {color: red; background-color: yellow;}
@@ -97,6 +120,19 @@
      *         computer monitor. All web browsers running on such systems are
      *         screen-medium user agents.
      */
+    
+    @supports (color: black) {
+      body {
+        color: black;
+      }
+    }
+
+    /* '@supports' is known as *feature queries*, it's very similar to media 
+     * queries in structure. That would look like behind.
+     */
+    
+    @supports (display: grid) and (shape-outside: circle()) { }
+    @supports (shape-outside: circle()) or (-webkit-shape-outside: circle()) { }
 
   </style>
 
