@@ -37,15 +37,15 @@ def cantor_print(end: int) -> None :
         if count == end :
             break
 
-        if current_d == 1 and direction == 1 :
-            current_n += 1
-            direction = -1
-        elif current_n == 1 and direction == -1 :
+        if current_n == 1 and direction == 1 :
             current_d += 1
+            direction = -1
+        elif current_d == 1 and direction == -1 :
+            current_n += 1
             direction = 1
         else :
-            current_n += direction
-            current_d += direction * (-1)
+            current_n += direction * (-1)
+            current_d += direction
 
     plt.axis("square")
     plt.savefig("Cantor.svg", format="svg")
@@ -103,15 +103,15 @@ def cantor_Q2N(x: str) -> int | None :
         if current_n == n and current_d == d :
             break
 
-        if current_d == 1 and direction == 1 :
-            current_n += 1
-            direction = -1
-        elif current_n == 1 and direction == -1 :
+        if current_n == 1 and direction == 1 :
             current_d += 1
+            direction = -1
+        elif current_d == 1 and direction == -1 :
+            current_n += 1
             direction = 1
         else :
-            current_n += direction
-            current_d += direction * (-1)
+            current_n += direction * (-1)
+            current_d += direction
 
     return count
 
@@ -138,12 +138,14 @@ def cantor_N2Q(x: int) -> str :
         if count == x :
             return "{}/{}".format(current_n, current_d)
 
-        if current_d == 1 and direction == 1 :
-            current_n += 1
-            direction = -1
-        elif current_n == 1 and direction == -1 :
+        if current_n == 1 and direction == 1 :
             current_d += 1
+            direction = -1
+        elif current_d == 1 and direction == -1 :
+            current_n += 1
             direction = 1
         else :
-            current_n += direction
-            current_d += direction * (-1)
+            current_n += direction * (-1)
+            current_d += direction
+
+cantor_print(100)

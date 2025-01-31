@@ -1,0 +1,72 @@
+<html>
+<head>
+  <title>Selectors</title>
+  <style>
+    h2 {color: grey;}           /* single selector    */
+    h2, p {font-size: xx-large;}  /* grouping selector  */
+    * {border: 1ch;}              /* universal selector */
+
+    .warning {
+      color: red;
+      font-weight: bold;
+    }
+    /* This is the so-called *class selector* */
+    /* The universal selector, represented by *, is implied when
+     * an ID, class, attribute selector, pseudoclass or pseudo-
+     * element selector is written without being attached to an
+     * element selector. Such as:
+     * 
+     * .my-class = *.my-class
+     * #my-id = *#my-id
+     */
+
+    p.info {
+      color: lightblue;
+      font-weight: lighter;
+    }
+
+    span, a.inner-important-info {
+      color: blue;
+      font-weight: bold;
+    }
+    /* We can add class selector to the element selector */
+
+    code.block-code.language-python {
+      font-family: 'Courier New', Courier, monospace;
+      color: black;
+    }
+    /* We can use multiple class selectors to select the
+     * elements that have multiple classes.
+     */
+    
+    #lead-para {font-weight: bold;}
+    /* This is the so-called ID selector 
+     * Unlike class selectors, ID selectors can't be combined with other
+     * IDs, since ID attributes do not permit a space-separated list of
+     * words.
+     */
+
+
+  </style>
+</head>
+<body>
+  <h2>The color of &lt;h2&gt; element is grey</h2>
+  <p>This is a paragraph.</p>
+
+  <p class="warning">When handling pointers, you must be careful.</p>
+  <p class="info">
+    <span class="inner-important-info">Click here</span>
+    to see if the browser supports JavaScript.
+    <a class="inner-important-info" href="#">More Info</a>
+  </p>
+
+  <pre>
+    <code class="block-code language-python">
+      for i in range(1, 10) :
+         print("{} is already shown on the terminal".format(i))
+    </code>
+  </pre>
+
+  <p id="lead-para">This paragraph will be boldfaced.</p>
+</body>
+</html>
