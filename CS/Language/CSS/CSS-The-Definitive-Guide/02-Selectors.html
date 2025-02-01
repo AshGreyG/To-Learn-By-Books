@@ -46,6 +46,83 @@
      * words.
      */
 
+    ol a[class] {color: brown;}
+    /* CSS2 introduced *attribute selectors*, which can be used to select
+     * elements based on their attributes and the values of those attributes
+     * and the values of those attributes. There are four general types of
+     * attribute selectors, exact attribute value selectors, partial-match
+     * attribute value selectors, and leading-value attribute selectors.
+     */
+
+    /* element_1 element_2 ... is so-called **descendent selectors**, also
+     * known as **contextual selectors**. It's not the direct father-children
+     * relationship:
+     *
+     *     ol -> li -> a  (can use 'ol a' to locate the <a> element)
+     */
+
+    ol a[class][href] {color: olive;}
+    /* Chaining the attribute selectors together to selector the elements
+     * which has multiple attributes. This selector selects a sub <a> 
+     * element of <li> element, which has class and href attributes.
+     */
+
+    p[name="test-for-multiple"][time="2011-12-09"] {
+      font-family: 'Courier New', Courier, monospace;
+      color: coral;
+    }
+    /* This format requires an exact match for the attribute's value. 
+     * Notice p[class="urgent warning"] is not equal to 
+     * p.urgent.warning   ---> This is not *exactly*.
+     */
+    
+    p[name~="test"][time="2012-12-09"] {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      color: darkgreen;
+    }
+    /* [foo~="bar"]     Selects any element with an attribute 'foo'*/
+    /*                  whose value contains the word 'bar' in a   */
+    /*                  **space-separated** list of words.         */
+
+    p[name*="test-for-"][time="2013-12-09"] {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: blueviolet;
+    }
+    /* [foo*="bar"]     Selects any element with an attribute 'foo'*/
+    /*                  whose value contains the **substring**     */
+    /*                  'bar'.                                     */
+
+    p[name^="test-for-the"][time="2014-12-09"] {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: chartreuse;
+    }
+    /* [foo^="bar"]     Selects any element with an attribute 'foo'*/
+    /*                  whose value **begins with** 'bar'.         */
+
+    p[name$="and-multiple"][time="2015-12-09"] {
+      font-family: 'Times New Roman', Times, serif;
+      color: crimson;
+    }
+    /* [foo$="bar"]     Selects any element with an attribute 'foo'*/
+    /*                  whose value **ends with** 'bar'            */
+
+    p[name|="en"][time="2016-12-09"] {
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      color: darkorchid;
+    }
+    /* [foo|="bar"]     Selects any element with an attribute 'foo'*/
+    /*                  whose value starts with 'bar' followed by  */
+    /*                  a dash '-' or whose value is exactly equal */
+    /*                  to 'bar'                                   */
+
+    ul > li.test-children > span {
+      color: red;
+      font-weight: bolder;
+    }
+    /* Sometimes we don't want to select an arbitrarily descendent 
+     * element. Rather, you want to narrow your range to select an
+     * element that is a child of another element. We can use '>'
+     */
 
   </style>
 </head>
@@ -68,5 +145,36 @@
   </pre>
 
   <p id="lead-para">This paragraph will be boldfaced.</p>
+
+  <ol>
+    <li><a class="have-class" href="www.example.com">Test-1</a></li>
+    <li><a class="have-class">Test-2</a></li>
+    <li><a>Test-3</a></li>
+    <li><a class="have-class">Test-4</a></li>
+  </ol>
+
+  <p name="test-for-multiple" time="2011-12-09">
+    This is a test for multiple exact attribute selectors.
+  </p>
+  <p name="test for multiple" time="2012-12-09">
+    This is a test for multiple partial ~= attribute selectors.
+  </p>
+  <p name="test-for-multiple" time="2013-12-09">
+    This is a test for multiple partial *= attribute selectors.
+  </p>
+  <p name="test-for-the-multiple" time="2014-12-09">
+    This is a test for multiple partial ^= attribute selectors.
+  </p>
+  <p name="test-for-and-multiple" time="2015-12-09">
+    This is a test for multiple partial $= attribute selectors.
+  </p>
+  <p name="en-test-for-multiple" time="2016-12-09">
+    This is a test for multiple partial |= attribute selectors.
+  </p>
+
+  <ul>
+    <li class="test-children">This is the <span>TEST</span>.</li>
+    <li class="test-children">Are this the <span>TEST</span>content?</li>
+  </ul>
 </body>
 </html>
