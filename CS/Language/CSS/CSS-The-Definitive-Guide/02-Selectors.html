@@ -124,6 +124,52 @@
      * element that is a child of another element. We can use '>'
      */
 
+    li.test-children > span.test-content + span {
+      color: deepskyblue;
+      font-weight: lighter;
+    }
+    /* To select an element that immediately follows another element 
+     * with the same parent, we use the adjacent-sibling combinator,
+     * represented as a plus symbol '+'.
+     */
+    
+    div.test-sibling > p ~ ol {
+      color: blue;
+    }
+    /* *General sibling combinator* lets us select* any element that
+     * follows another element when both elements share the same parent
+     * , represented using the tilde '~' combinator.
+     */
+    
+    a:link:hover {color: red;}
+    a:visited:hover {color:maroon;}
+    /* *Pseudo-class selectors* ley us assign styles to what are inferred
+     * by the **state** of certain elements.  ---> Phantom classes
+     * The order we specify doesn't actually matter.
+     *
+     *     a:hover:link == a:link:hover
+     *
+     * Be careful not to combine mutually exclusive pseudo-classes, for
+     * example, a link cannot be both visited and unvisited.
+     */
+    
+    :root {
+      --background-color: #1e1e2e;
+      --general-border-radius: 3pt;
+    }
+    /* The pseudo-class :root selects the root element of the document.
+     * In HTML, this is always the <html> element.
+     */
+    
+    a[href] > img[src^="https://avatars.githubusercontent.com"][alt]:only-child {
+      border: 2px solid black;
+    }
+    /* ':only-child' pseudo-class chooses the element whose parent has 
+     * only one child, which is exactly this element.
+     */
+    
+    
+    
   </style>
 </head>
 <body>
@@ -174,7 +220,43 @@
 
   <ul>
     <li class="test-children">This is the <span>TEST</span>.</li>
-    <li class="test-children">Are this the <span>TEST</span>content?</li>
+    <li class="test-children">
+      Are this the 
+      <span class="test-content">TEST</span> 
+      content 
+      <span>?</span>
+    </li>
   </ul>
+
+  <div class="test-sibling">
+    <h2>Subheading</h2>
+    <p>It's the case that not every heading can be a main heading.</p>
+    <ol>
+      <li>Test-1</li>
+      <li>Test-2</li>
+      <li>Test-3</li>
+      <li>Test-4</li>
+    </ol>
+    <ol>
+      <li>Test-5</li>
+      <li>Test-6</li>
+      <li>Test-7</li>
+      <li>Test-8</li>
+    </ol>
+    <p>This is not &lt;ol&gt; element.</p>
+    <ol>
+      <li>Test-9</li>
+      <li>Test-10</li>
+    </ol>
+  </div>
+
+  <a href="https://www.example.com">No inline style</a>
+  <a href="https://www.example.com">
+    <img src="https://avatars.githubusercontent.com/u/116322429?v=4" alt="No image">
+  </a>
+  <a href="https://www.example.com">
+    <img src="https://avatars.githubusercontent.com/u/116322429?v=4" alt="No image">
+    <em>Ha! Another content!</em>
+  </a>
 </body>
 </html>

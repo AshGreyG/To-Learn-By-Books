@@ -51,3 +51,4 @@ let readonlyPerson: ReadonlyPerson = writablePerson;  // Ok
 console.log(readonlyPerson.age);  // 21
 writablePerson.age++;
 console.log(readonlyPerson.age);  // 22
+
