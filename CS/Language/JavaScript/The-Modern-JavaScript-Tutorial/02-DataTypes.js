@@ -40,6 +40,28 @@ alert(NaN ** 0);  // 1
 // larger than 2 ^ 53 - 1, that's 9007199254740991. The number type can store
 // larger integers up to 1.7976931348623157 * 10 ^ 308, but outside of the
 // safe integer range there'll be a precision error.
+//
+// All odd integers greater than 2 ^ 53 - 1 can't be stored at all in the 
+// 'number' type.
 
-alert(9007199254740991 + 1);
-alert(9007199254740991 + 2);
+alert(9007199254740991 + 1);  // 9007199254740992
+alert(9007199254740991 + 2);  // 9007199254740992
+
+// 'BigInt' type was recently added to the language to represent integers of
+// arbitrary length. A 'BigInt' type value is created by appending 'n' to
+// the end of an integer:
+
+const testBigInt1 = 12345678901234657890n;
+const testBigInt2 = BigInt("12345678901234567890");
+
+// A 'string' in JavaScript must be surrounded by quotes:
+
+let testDoubleQuotes = "This is a test";
+let testSingleQuotes = "This is a test";
+let testTemplateString = `${testDoubleQuotes} + is embedded`;
+
+// If we use 'let str = `${str}`;', its value will be "undefined"
+// Backticks(``) are extended functionality quotes, they allow us to embed
+// variables and expressions into a string by wrapping them into '${...}'
+
+// 
