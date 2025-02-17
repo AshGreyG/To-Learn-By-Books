@@ -202,4 +202,112 @@ interface BasicCircle {
 }
 interface ColorfulCircle extends BasicColor, BasicCircle {}
 
+let testColorfulCircle: ColorfulCircle = {
+  color: "red", // from BasicColor
+  radius: 10    // from BasicCircle
+};
+
 // 'interface's can also extend from multiple types.
+
+// TypeScript provides another construct called *intersection types* that is mainly
+// used to combine existing object types. An intersection type is defined using the
+// '&' operator.
+
+type IntersectionColorfulCircle = BasicColor & BasicCircle;
+
+// We've intersected 'BasicColor' and 'BasicCircle' to produce a new type that
+// has all the members of 'BasicColor' and 'BasicCircle'
+
+let testIntersectionColorfulCircle: IntersectionColorfulCircle = {
+  color: "blue",  // from BasicColor
+  radius: 9       // from BasicCircle
+}
+
+// Do not use '&' when two types has same property name but their types are conflict
+
+interface TestIntersectionConflict1 {
+  name: string;
+}
+interface TestIntersectionConflict2 {
+  name: number;
+}
+type Conflict = TestIntersectionConflict1 & TestIntersectionConflict2;
+declare const testConflict: Conflict;
+testConflict.name;  // let testConflict.name: never
+
+// We can make a generic 'Box' type which declares a *type parameter*.
+
+interface Box<Type> {
+  contents: Type;
+}
+
+let stringBox: Box<string> = { contents: "This is a test"  }; // contents: string
+
+// 'Array' itself is a generic type.
+
+function testBuiltinReadonlyArray(values: ReadonlyArray<string>) {
+  const copy = values.slice();
+  console.log(`The first value is ${values[0]}`);
+
+  // values.push("Hello"); // uncomment here
+  //        ^^^^
+  // Property 'push' does not exist on type 'readonly string[]'
+}
+
+// Unlike 'Array', there isn't a 'ReadonlyArray' constructor that we can use.
+// 'Array' is actually defined in JavaScript, but 'ReadonlyArray' is not.
+// Instead, we can assign regular 'Array's to 'ReadonlyArray's, but we can't
+// do the opposite.
+
+const roArray: ReadonlyArray<string> = [
+  "first", "second", "third"
+];
+
+// A *tuple type* is another sort of 'Array' type that knows exactly how many 
+// elements it contains, and exactly which types it contains at specific positions.
+
+type StringNumberPair = [string, number];
+
+// Here, 'StringNumberPair' is a tuple type of 'string' and 'number'. Like 'Readonly
+// Array', it has no representation at runtime. To the type system, 'StringNumberPair'
+// describes arrays whose '0' index contains a 'string' and whose '1' index contains
+// a 'number'.
+
+function testTuple(pair: [string, number]) {
+  const a = pair[0];  // const a: string
+  const b = pair[1];  // const b: number
+}
+testTuple(["AshGrey", 20]);
+
+// We can also destructure tuples using JavaScript's array destructing:
+
+function testTupleDestructure(stringHash: [string, number]) {
+  const [inputString, hash] = stringHash;
+  console.log(inputString); // const inputString: string
+  console.log(hash);        // const hash: number
+}
+
+// Tuples can have optional properties by writing out a question mark '?'
+// after an element's type. Optional tuple element can only come at the
+// *end*, and also affect the type of 'length'.
+
+type Either2dOr3d = [number, number, number?];
+
+function setCoordinate(coord: Either2dOr3d) {
+  const [x, y, z] = coord;  // const z: number | undefined
+}
+
+// Tuples can also have rest elements, which have to be an array/tuple type
+
+type StringNumberBooleans = [string, number, ...boolean[]];
+type StringBooleansNumber = [string, ...boolean[], number];
+type BooleansStringNumber = [...boolean[], string, number];
+
+// Tuple types have 'readonly' variants, and can be specified by sticking
+// a 'readonly' modifiers in front of them.
+
+function testReadonlyTuple(pair: readonly [string, number]) {
+  // pair[0] = "Change!";  // uncomment here
+  //      ^
+  // Can't assign to '0' property because it's readonly.
+}
