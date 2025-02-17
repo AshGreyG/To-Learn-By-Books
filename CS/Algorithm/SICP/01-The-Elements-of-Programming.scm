@@ -187,6 +187,10 @@ size        ; 2
 ; expression is
 ; (if <predicate> <consequent> <alternative>)
 
+;;; The reason why we say 'if' a special form is that it will first evaluate the
+;;; predicate rather then consequent and alternative. The combinations will evaluate
+;;; all the operands. See ./02-Square-Roots-by-Newton-Method.scm -> Exercise 1.6
+
 ; The three most frequently used logical compositions operations are:
 ;   1. (and <e_1> ... <e_n>)
 ;      The interpreter evaluates the expression <e> one at a time, in left-to-right
