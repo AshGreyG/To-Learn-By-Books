@@ -122,3 +122,84 @@ interface SquareConfig {
   width?: number;
 }
 
+function createSquare(config: SquareConfig): { 
+  color: string; 
+  area: number
+} {
+  return {
+    color: config.color || "red",
+    area: config.width ? config.width * config.width : 20
+  }
+}
+
+let testSquare1 = createSquare({ color: "blue", width: 10 });
+// If we use 'colour' instead of 'color', JavaScript will fail silently,
+// but TypeScript can figure the mistake out.
+
+// let testSquare2 = createSquare({ width: 10, opacity: 0.5 });  // uncomment here
+//                                             ^^^^^^^
+// Object literal may only specify known properties, 
+// and 'opacity' does not exist in type 'SquareConfig'
+
+let testSquare3 = createSquare({ width: 10, opacity: 0.5 } as SquareConfig);
+// The easiest method is to just use a type assertion.
+
+// However, a better approach might be to add a string index signature if we're
+// sure that the object can have some extra properties that are used in some
+// special way. We could define like this:
+
+interface BetterSquareConfig {
+  color?: string;
+  width?: number;
+  [propName: string]: unknown;
+}
+declare function createBetterSquare(config: BetterSquareConfig);
+
+// But now compiler won't give us an error.
+
+let testSquare4 = createBetterSquare({
+  colour: "red",  // There is a spelling mistake
+  width: 10,
+  opacity: 0.5
+});
+
+// It's common to have types that might be more specific versions of other types
+// We might have a 'BasicAddress' type that describes the fields.
+
+interface BasicAddress {
+  name?: string;
+  street: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
+
+// But addresses often have a unit number associated with them if the building at
+// an address has multiple units:
+
+interface AddressWithUnitButNoExtend {
+  name?: string;
+  unit: string;
+  street: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
+
+// The downside here is that we had to repeat all the other fields from 'BasicAddress'
+// when our changes were purely additive. Instead, we can *extend* the original 'Basic
+// Address' type and just add the new fields:
+
+interface AddressWithUnitAndExtend extends BasicAddress {
+  unit: string;
+}
+
+interface BasicColor {
+  color: string;
+}
+interface BasicCircle {
+  radius: number;
+}
+interface ColorfulCircle extends BasicColor, BasicCircle {}
+
+// 'interface's can also extend from multiple types.
