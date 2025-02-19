@@ -152,7 +152,7 @@
 ;      = 0                      if y = 0
 ;      = 2y                     if x = 0
 ;      = 2                      if y = 1
-;      = A(x - 1, A(x, y - 1))
+;      = A(x - 1, A(x, y - 1))  otherwise
 ; $
 
 ; I will define a pow function using tail recursive:
@@ -204,3 +204,32 @@
 (define (h n) (A 2 n))  ; h is $ 2 ^ {2 ^ {2 \cdots ^ 2}}, altogether n number of 2 $
 
 ; -----------------------------------------------
+
+; Another common pattern of computation is called *tree recursion*. As an
+; example, consider computing the sequence of Fibonacci numbers. In general,
+; the Fibonacci numbers can be defined by the rule
+
+; $
+;   Fib(n) 
+;     = 0                        if n = 0
+;     = 1                        if n = 1
+;     = Fib(n - 1) + Fib(n - 2)  otherwise
+; $
+
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+
+; Consider the pattern of this computation:
+;                                        (fib 5)
+;                     (fib 4)                               (fib 3)
+;           (fib 3)              (fib 2)              (fib 2)     (fib 1)
+;     (fib 2)     (fib 1)  (fib 1)     (fib 0)  (fib 1)      (fib 0)
+; (fib 1)  (fib 0)
+
+; This procedure is instructive as a prototypical tree recursion, but it
+; is a terrible way to compute Fibonacci numbers because it does so much
+; redundant computation. The entire computation of (fib 3) almost half
+; the work is duplicated.
