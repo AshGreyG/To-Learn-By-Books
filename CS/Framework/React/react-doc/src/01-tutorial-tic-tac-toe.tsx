@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 interface SquarePropType {
   value: string | null ;
+  isWinSquare: boolean;
   onSquareClick: () => void;
 }
 
@@ -55,10 +56,13 @@ function Square(prop: SquarePropType) {
     <button 
       className="square"
       onClick={prop.onSquareClick}
+      style={prop.isWinSquare ? { backgroundColor: "yellow" } : {}}
     >
       {prop.value}
     </button>
   )
+
+  // 4. When someone wins, highlight the three squares that caused the win.
 }
 
 // To check for a winner in a tic-tac-toe game, the 'Board' would need
@@ -68,6 +72,30 @@ function Square(prop: SquarePropType) {
 // Instead, the best approach is to store the game's state in the parent
 // 'Board' component instead of in each 'Square'. 'Board' component can
 // tell each 'Square' what to display 
+
+// State: 
+//   1❎. The state of board, it changes over time, but it can be calculated
+//        from the history of game and the current move.
+//   2✅. The history of board, it changes over time, and can't be calculated
+//   3✅. Current move. Because user can click the history move.
+//   5❎. The state of game (if draw), it can be calculated from
+//        the state of board.
+//   6✅. The next player, it changes over time. Depends on the first player,
+//        so it needs to be a state.
+//   7✅. Ascending or descending order of moves. It's decided by users.
+//   8❎. Highlight the three squares that caused the win. This can be calculated
+//        from the history of board.
+
+// history, currentMove, xIsNext, isAscending       -> Game (states)
+// 
+// history + currentMove => squares
+// xIsNext                                          -> Game/Board
+// A function as props, onPlay
+//
+// squares => value
+// isWinSquareList => isWinSquare                   -> Game/Board/Square
+// 
+// history, isAscending, currentMove                -> Game/MoveList
 
 interface BoardPropType {
   xIsNext: boolean;
@@ -84,8 +112,10 @@ interface BoardPropType {
 
 function Board(prop: BoardPropType) {
 
+  let isWinSquareList: boolean[] = Array(9).fill(false);
+
   function calculateWinner(squares: (string | null)[]): string | null {
-    const LINES: (number[])[] = [
+    const LINES: number[][] = [
       [0, 1, 2],
       [3, 4, 5],
       [6, 7, 8],
@@ -103,6 +133,9 @@ function Board(prop: BoardPropType) {
         squares[a] === squares[b] &&
         squares[a] === squares[c]
       ) {
+        isWinSquareList[a] = true;
+        isWinSquareList[b] = true;
+        isWinSquareList[c] = true;
         return squares[a];
       }
     }
@@ -202,6 +235,7 @@ function Board(prop: BoardPropType) {
             return (
               <Square 
                 value={prop.squares[buttonIndex]}
+                isWinSquare={isWinSquareList[buttonIndex]}
                 onSquareClick={() => handleClick(buttonIndex)}
               />
             )
@@ -222,11 +256,81 @@ function Board(prop: BoardPropType) {
   )
 }
 
+interface MoveListPropType {
+  history: (string | null)[][];
+  isAscending: boolean;
+  currentMove: number;
+  jumpTo: (number) => void;
+  onOrderChange: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function MoveList(prop: MoveListPropType) {
+  let historyLength: number = prop.history.length;
+
+  const moves: React.JSX.Element[] = 
+    prop.history.map((_, index) => {
+      let move: number
+        = prop.isAscending
+        ? index
+        : historyLength - index - 1;
+      let description: string;
+      if (move > 0) {
+        description = "Go to move #" + move;
+      } else {
+        description = "Go to game start";
+      }
+
+      let pressedSquareCoord: string | null = null;
+      if (move > 0) {
+        for (let i: number = 0; i < prop.history[move].length; ++i) {
+          if (prop.history[move - 1][i] !== prop.history[move][i]) {
+            pressedSquareCoord 
+              = "("
+              + String(i % 3 + 1)
+              + ", "
+              + String(Math.floor(i / 3) + 1)
+              + ")";
+          }
+        }
+      }
+
+      return (
+        <li key={move}>
+          {
+            move === prop.currentMove ? (
+              <p>
+                {description + " " + (pressedSquareCoord ? pressedSquareCoord : "")}
+              </p>
+            ) : (
+              <button onClick={() => prop.jumpTo(move)}>
+                {description + " " + (pressedSquareCoord ? pressedSquareCoord : "")}
+              </button>
+            )
+          }
+        </li>
+      );
+    });
+  
+  return (
+    <>
+      <ol>{moves}</ol>
+      <button onClick={() => prop.onOrderChange(!prop.isAscending)}>
+        {
+          prop.isAscending 
+            ? "Now moves are in ascending order. Click to descend them." 
+            : "Now moves are in descending order. Click to ascend them."
+        }
+      </button>
+    </>
+  )
+}
+
 function Game() {
 
   const [xIsNext, setXIsNext] = useState<boolean>(true);
   const [history, setHistory] = useState<(string | null)[][]>([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState<number>(0);
+  const [isAscending, setIsAscending] = useState<boolean>(true);
 
   const currentSquares: (string | null)[] = history[currentMove];
 
@@ -242,63 +346,47 @@ function Game() {
     setXIsNext(nextMove % 2 === 0);
   }
 
-  const moves: React.JSX.Element[] = history.map((_, move) => {
-    let description: string;
-    if (move > 0) {
-      description = "Go to move #" + move;
-    } else {
-      description = "Go to game start";
-    }
+  // Each child in a list should have a unique "key" prop. When you render
+  // a list, React stores some information about each rendered list item.
+  // When you update a list, React needs to determine what has changed. You
+  // need to specify a 'key' property for each list item to differentiate
+  // each list item from its siblings.
 
-    return (
-      <li key={move}>
-        {
-          move === currentMove ? (
-            <p>{description}</p>
-          ) : (
-            <button onClick={() => jumpTo(move)}>{description}</button>
-          )
-          // 1. For the current move only, show "You are at move #..."
-          //    instead of a button.
-        }
-      </li>
-    );
+  // If the current list has a key that didn't exist before , React creates
+  // a component. If the current list is missing a key that existed in the
+  // previous list, React destroys the previous component.
 
-    // Each child in a list should have a unique "key" prop. When you render
-    // a list, React stores some information about each rendered list item.
-    // When you update a list, React needs to determine what has changed. You
-    // need to specify a 'key' property for each list item to differentiate
-    // each list item from its siblings.
+  // Keys tell React about the identity of each component, which allows
+  // React to maintain state between re-renders. 'key' is a special and
+  // reserved property in React. Even though 'key' may look like it is
+  // passed as props, React automatically uses 'key' to decide which
+  // components to update. There's no way for a component to ask what
+  // 'key' its parent specified.
 
-    // If the current list has a key that didn't exist before , React creates
-    // a component. If the current list is missing a key that existed in the
-    // previous list, React destroys the previous component.
+  // If no key is specified, React will report an error and use the array
+  // index as a key by default. Using the array index as a key is problematic
+  // when trying to re-order a list's items or inserting / removing list
+  // items. Explicitly passing 'key={i}' silences the error but has the same
+  // problems as array indices.
 
-    // Keys tell React about the identity of each component, which allows
-    // React to maintain state between re-renders. 'key' is a special and
-    // reserved property in React. Even though 'key' may look like it is
-    // passed as props, React automatically uses 'key' to decide which
-    // components to update. There's no way for a component to ask what
-    // 'key' its parent specified.
-
-    // If no key is specified, React will report an error and use the array
-    // index as a key by default. Using the array index as a key is problematic
-    // when trying to re-order a list's items or inserting / removing list
-    // items. Explicitly passing 'key={i}' silences the error but has the same
-    // problems as array indices.
-  });
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board 
+        <Board
           xIsNext={xIsNext}
           squares={currentSquares}
           onPlay={handlePlay}
         />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <MoveList 
+          history={history}
+          isAscending={isAscending}
+          currentMove={currentMove}
+          jumpTo={jumpTo}
+          onOrderChange={setIsAscending}
+        />
       </div>
     </div>
   )
