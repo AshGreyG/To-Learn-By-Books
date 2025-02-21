@@ -299,17 +299,20 @@ function MoveList(prop: MoveListPropType) {
           {
             move === prop.currentMove ? (
               <p>
-                {description + " " + (pressedSquareCoord ? pressedSquareCoord : "")}
+                {description} {pressedSquareCoord}
               </p>
             ) : (
               <button onClick={() => prop.jumpTo(move)}>
-                {description + " " + (pressedSquareCoord ? pressedSquareCoord : "")}
+                {description} {pressedSquareCoord}
               </button>
             )
           }
         </li>
       );
     });
+
+    // React considers 'false' as a hole in the JSX tree, just like
+    // 'null' or 'undefined', and doesn't render anything in its place
   
   return (
     <>
@@ -368,7 +371,6 @@ function Game() {
   // when trying to re-order a list's items or inserting / removing list
   // items. Explicitly passing 'key={i}' silences the error but has the same
   // problems as array indices.
-
 
   return (
     <div className="game">

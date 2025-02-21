@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
 
-import Game from './01-tutorial-tic-tac-toe.tsx';
-import FilterableProductTable from './02-thinking-in-react.tsx';
+import Game from './01-Tutorial-Tic-Tac-Toe.tsx';
+import FilterableProductTable from './02-Thinking-in-React.tsx';
+import DescribingUI from './03-Describing-the-UI.tsx';
 
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
       <Game />
       <hr />
       <FilterableProductTable />
+      <hr />
+      <DescribingUI />
     </div>
   );
 }
