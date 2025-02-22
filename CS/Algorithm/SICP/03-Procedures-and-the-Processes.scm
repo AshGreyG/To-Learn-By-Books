@@ -232,4 +232,93 @@
 ; This procedure is instructive as a prototypical tree recursion, but it
 ; is a terrible way to compute Fibonacci numbers because it does so much
 ; redundant computation. The entire computation of (fib 3) almost half
-; the work is duplicated.
+; the work is duplicated. The number of times the procedure will compute
+; (fib 1) or (fib 0) Fib(n + 1) times
+
+; 1. First we know that Fib(2) = Fib(0) + Fib(1), total 2 times of Fib(0)
+;    or Fib(1), and Fib(2) = 2. Fib(3) = Fib(2) + Fib(1) = Fib(0) + 2Fib(1),
+;    total 3 times. Fib(3) = 3.
+; 2. Then we assume that for k >= 2, to calculate Fib(k) we need total 
+;    Fib(k + 1) times of Fib(0) or Fib(1) and to calculate Fib(k + 1) we need 
+;    Fib(k + 2) times of Fib(0) or Fib(1).
+; 3. To calculate Fib(k + 3), Fib(k + 3) = Fib(k + 1) + Fib(k + 2), it needs
+;    total Fib(k + 2) + Fib(k + 3) = Fib(k + 4) times of Fib(0) or Fib(1)
+
+; Fib(n) is the closet integer to $ \phi^n / \sqrt{5} $, where
+;
+; $ \phi = \frac{1 + \sqrt{5}}{2} \approx 1.6180 $
+;
+; Thus the process uses a number of steps that grows exponentially with the
+; input.
+
+; We can also formulate an iterative process for computing the Fibonacci numbers.
+; The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and 
+; Fib(0) = 0 , and to repeatedly apply the simultaneous transformations
+;
+;                 a <- a + b
+;                 b <- a  (notice now a hasn't changed yet)
+
+(define (better-fib n)
+  (define (fib-iter a b count)
+    (if (= count 0)
+        b
+        (fib-iter (+ a b) a (- count 1))))
+  (fib-iter 1 0 n))
+
+; Exercise: Counting change
+
+; The number of ways to change amount $a$ using $n$ kinds of coins equals
+;   + The number of ways to change amount $a$ using all but first kind, plus
+;   + The number of ways to change amount $a-d$ using all n kinds of
+;     coins, where $d$ is the denomination of the first kind of coin
+
+; This is because the ways to make change can be divided into two groups: those
+; that do not use any of the first kind of coin, and those that do. And latter
+; equals we must use at least one first coin, so ways of $a$ = ways of $a-d$
+
+; Thus we can recursively reduce the problem of changing a given amount to the
+; problem of changing smaller amounts using fewer kinds of coins.
+
+; If $a = 0$, we should count that as $1$ way to make change.
+; If $a < 0$, we should count that as $0$ ways to make change.
+; If $n = 0$, we should count that as $0$ ways to make change.
+
+(define (count-change amount)
+  (define (first-denomination kinds-of-coins)
+    (cond ((= kinds-of-coins 1) 1)
+          ((= kinds-of-coins 2) 5)
+          ((= kinds-of-coins 3) 10)
+          ((= kinds-of-coins 4) 25)
+          ((= kinds-of-coins 5) 50)))
+
+  ; These are different denominations of different coins
+
+  (define (count-change-iter amount kinds-of-coins)
+    (cond ((= amount 0) 1)
+          ((or (< amount 0) (= kinds-of-coins 0)) 0)
+          (else (+ (count-change-iter amount (- kinds-of-coins 1))
+                   (count-change-iter (- amount
+                                         (first-denomination kinds-of-coins))
+                                      kinds-of-coins)))))
+  (count-change-iter amount 5))
+
+; 'count-change-iter' function generates a tree-recursive process with
+; redundancies similar to those in out first implementation of 'fib'. On the
+; other hand, it is not obvious how to design a better algorithm for computing
+; the result.
+
+; ---------------- Exercise 1.11 ----------------
+
+(define (recursive-f n) 
+  (cond ((< n 3) n)
+        (else (+ (recursive-f (- n 1))
+                 (* 2 (recursive-f (- n 2)))
+                 (* 3 (recursive-f (- n 3)))))))
+
+; a, b, c initialized with f(0) = 0, f(1) = 1, f(2) = 2
+;
+; c <- c + 2b + 3a
+; 
+
+(define (iterative-f n)
+  (define (iter )))
