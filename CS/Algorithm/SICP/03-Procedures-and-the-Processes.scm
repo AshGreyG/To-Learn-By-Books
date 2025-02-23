@@ -316,9 +316,30 @@
                  (* 3 (recursive-f (- n 3)))))))
 
 ; a, b, c initialized with f(0) = 0, f(1) = 1, f(2) = 2
-;
-; c <- c + 2b + 3a
-; 
 
 (define (iterative-f n)
-  (define (iter )))
+  (define (iter a b c count)
+    (if (= count 0)
+        a
+        (iter b c (+ (* 3 a) (* 2 b) c) (- count 1))))
+  (iter 0 1 2 n))
+
+; -----------------------------------------------
+
+; ---------------- Exercise 1.12 ----------------
+
+; In effect, we can have the formula as below:
+; 
+; $ 
+;   Pascal(m, n) 
+;     = 1                                           if n = 1 or n = m
+;     = Pascal(m - 1, n - 1) + Pascal(m - 1, n) otherwise
+; $
+
+(define (pascal m n)
+  (if (or (= 1 n) (= m n))
+      1
+      (+ (pascal (- m 1) (- n 1))
+         (pascal (- m 1) n))))
+
+; -----------------------------------------------
