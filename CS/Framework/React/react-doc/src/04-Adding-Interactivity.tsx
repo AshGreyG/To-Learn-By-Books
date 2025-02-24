@@ -288,6 +288,288 @@ function AbleMovingDot() {
   );
 }
 
+// Consider a nested object structure like this:
+
+function NestedObject() {
+  interface Person {
+    name: string;
+    artwork: {
+      title: string;
+      city: string;
+      image: string;
+    }
+  }
+
+  const [person, setPerson] = useState<Person>({
+    name: "Niki de Saint Phalle",
+    artwork: {
+      title: "Blue Nana",
+      city: "Hamburg",
+      image: "https://i.imgur.com/Sd1AgUOm.jpg"
+    }
+  });
+
+  // In React, you treat state as immutable! In order to change 'city', you
+  // would first need to produce the new 'artwork' object and then produce
+  // the new person object which points at the new 'artwork'
+
+  const nextArtwork: typeof person.artwork = { ...person.artwork, city: "New Delhi" };
+  const nextPerson: Person = { ...person, artwork: nextArtwork };
+  setPerson(nextPerson);
+
+  // or we can write it as:
+
+  setPerson({
+    ...person,
+    artwork: {
+      ...person.artwork,
+      city: "New Delhi"
+    }
+  });
+
+  // 'nesting' is an inaccurate way to think about how objects behave. When the code
+  // executes, there is no such thing as a "nested" object. You are really looking at
+  // two different objects
+
+  let object1: typeof person.artwork = {
+    title: "Blue Nana",
+    city: "Hamburg",
+    image: "https://i.imgur.com/Sa1AguOm.jpg"
+  };
+
+  let object2: Person = {
+    name: " Niki de Saint Pahlle",
+    artwork: object1
+  };
+
+  let object3: Person = {
+    name: "Copycat",
+    artwork: object1
+  };
+
+  // If you were to mutate 'object3.artwork.city', it would affect both 'object2.artwork.city'
+  // and 'object1.city'. This is because they are the same object, they are separate objects
+  // pointing at each other with properties.
+}
+
+// Arrays are mutable in JavaScript, but you should treat them as immutable when you 
+// store them in state.
+
+// 1. Adding to an array
+//    'push()' will mutate an array, which you don't want. Instead, create a
+//    new array which contains the existing items and a new item at the end.
+//    There are multiple ways to do this, but the easiest one is to use the
+//    '...' array spread syntax.
+
+function ArrayAdding() {
+  interface Artist {
+    name: string;
+    id: number;
+    age: number;
+  }
+
+  const [artists, setArtists] = useState<Artist[]>([]);
+  let nextID: number = 0;
+
+  setArtists([
+    ...artists,
+    {
+      name: "AshGrey",
+      id: nextID++,
+      age: 21
+    }
+  ]);
+}
+
+// 2. Removing from an array
+//    The easiest way to remove an item from an array is to filter it out.
+//    In other words, you will produce a new array that will not contain
+//    that item. To do this, use the 'filter' method.
+
+function ArrayRemoving() {
+  interface Artist {
+    name: string;
+    id: number;
+    age: number;
+  }
+
+  let initialArtists: Artist[] = [
+    { name: "Marta Colvin Andrade",  id: 0, age: 21 },
+    { name: "Lamidi Olonade Fakeye", id: 1, age: 32 },
+    { name: "Louise Nevelson",       id: 2, age: 34 }
+  ];
+
+  const [artists, setArtists] = useState<Artist[]>(initialArtists);
+
+  return (
+    <>
+      <h1>Inspiring sculptors:</h1>
+      <ul>
+        {artists.map((artist) => {
+          return (
+            <li key={artist.id}>
+              {artist.name}{" "}
+              <button onClick={() => {
+                setArtists(
+                  artists.filter(a => a.id !== artist.id)
+                );
+              }}>
+                Delete
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+    </>
+  );
+}
+
+// 3. Transforming an array
+//    If you want to change some or all items of the array, you can use
+//    map() to create a new array.
+
+function ArrayTransforming() {
+  interface Shape {
+    id: number;
+    type: 
+      | "circle"
+      | "square";
+    x: number;
+    y: number;
+  }
+
+  let initialShapes: Shape[] = [
+    { id: 0, type: "circle", x: 50,  y: 100 },
+    { id: 1, type: "square", x: 150, y: 100 },
+    { id: 2, type: "circle", x: 250, y: 100 }
+  ];
+  const [shapes, setShapes] = useState<Shape[]>(initialShapes);
+
+  function handleClick() {
+    const nextShapes: Shape[] = shapes.map((shape) => {
+      if (shape.type === "square") {
+        return shape;
+      } else {
+        return {
+          ...shape,
+          y: shape.y + 50
+        };
+      }
+    });
+
+    setShapes(nextShapes);
+  }
+
+  return (
+    <div className="container">
+      <button onClick={handleClick}>
+        Move circles down!
+      </button>
+      {shapes.map((shape) => (
+        <div
+          key={shape.id}
+          style={{
+            background: "purple",
+            position: "absolute",
+            left: shape.x,
+            top: shape.y,
+            borderRadius: shape.type === "circle" ? "50%" : "",
+            width: 20,
+            height: 20
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// 4. Replacing items in an array
+//    It is particularly common to want to replace one or more items in an array.
+//    Assignments like array 'arr[0] = "bird"' are mutating the original array, so
+//    instead you'll want to use 'map' for this as well.
+
+function ArrayReplacing() {
+  let initialCounters: number[] = [0, 0, 0];
+  const [counters, setCounters] = useState<number[]>(initialCounters);
+
+  function handleIncrementClick(index: number) {
+    const nextCounters: number[] = counters.map((c, i) => i === index ? c + 1 : c);
+    setCounters(nextCounters);
+  }
+
+  return (
+    <ul>
+      {counters.map((counter, i) => (
+        <li key={i}>
+          {counter}
+          <button onClick={() => handleIncrementClick(i)}>
+            +1
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// 4. Inserting into an array
+//    Sometimes you may want to inset an item at a particular position that's
+//    neither at the beginning nor at the end. To do this, you can use the '...'
+//    array spread syntax together with the 'slice()' method.
+
+function ArrayInserting() {
+  interface Artist {
+    id: number;
+    name: string;
+    age: number;
+  }
+  let nextID: number = 3;
+  let initialArtists: Artist[] = [
+    { name: "Marta Colvin Andrade",  id: 0, age: 21 },
+    { name: "Lamidi Olonade Fakeye", id: 1, age: 32 },
+    { name: "Louise Nevelson",       id: 2, age: 34 }
+  ];
+
+  const [name, setName] = useState<string>("");
+  const [age, setAge] = useState<number>(18);
+  const [artists, setArtists] = useState<Artist[]>(initialArtists);
+
+  function handleClick() {
+    const insertAt: number = 1;
+    const nextArtists: Artist[] = [
+      ...artists.slice(0, insertAt),            // Items before the insertion point
+      { id: nextID++, name: name, age: age },   // New item
+      ...artists.slice(insertAt)                // Items after the insertion point
+    ];
+    setArtists(nextArtists);
+  }
+
+  return (
+    <>
+      <h1>Inspiring sculptors:</h1>
+      <input 
+        type="text"
+        placeholder="name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input 
+        type="text" 
+        placeholder="age"
+        value={age}
+        onChange={(e) => setAge(parseInt(e.target.value))}
+      />
+      <button onClick={handleClick}>
+        Insert
+      </button>
+      <ul>
+        {artists.map((artist) => (
+          <li key={artist.id}>{artist.name}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
 function AddingInteractivity() {
   return (
     <>
@@ -304,6 +586,11 @@ function AddingInteractivity() {
 
       <UnableMovingDot />
       <AbleMovingDot />
+
+      <ArrayRemoving />
+      <ArrayTransforming />
+      <ArrayReplacing />
+      <ArrayInserting />
     </>
   );
 }
