@@ -343,3 +343,91 @@
          (pascal (- m 1) n))))
 
 ; -----------------------------------------------
+
+; One convenient way to describe this difference is to use the notion
+; of *order of growth* to obtain a gross measure of the resource required
+; by a process as the inputs become larger.
+
+; Let $n$ be a parameter that measures the size of the problem, and let
+; $R(n)$ be the amount of resources the process requires for a problem
+; of size $n$. In general there are a number of properties of the problem
+; with respect to which it will be describe to analyze a given process.
+; Similarly, $R(n)$ might measure the number of internal storage registers
+; used, the number of elementary machine operations performed.
+
+; We say that $R(n)$ has order of growth 
+;                              $ \Theta(f(n)) $
+; written $R(n)=\Theta(f(n))$, if there are positive constants $k_1$ and
+; $k_2$ independent of $n$ such that
+;                        $ k_1 f(n) <= R(n) <= k_2 f(n) $
+; for any sufficiently large value of $n$.
+
+; For the linear recursive process for computing factorial, the steps 
+; required for this process grows as $\Theta(n)$. For the iterative
+; factorial, the number of steps is still $\Theta(n)$ but the space is
+; $\Theta(1)$ - that is, constant. 
+
+; The tree-recursive Fibonacci computation requires $\Theta(\phi^n)$ steps
+; and space $\Theta(n)$.
+
+; ---------------- Exercise 1.14 ----------------
+
+(count-change 11)
+(count-change-iter 11 5)
+  (count-change-iter 11 4)
+    (count-change-iter 11 3)
+      (count-change-iter 11 2)
+        (count-change-iter 11 1)
+          (count-change-iter 11 0)
+          (count-change-iter 10 1)
+            (count-change-iter 10 0)
+            (count-change-iter 9 1)
+            ...
+              (count-change-iter 1 0)
+              (count-change-iter 0 1)       ; ✅  11 x 1
+        (count-change-iter 6 2)
+          (count-change-iter 6 1)
+            (count-change-iter 6 0)
+            (count-change-iter 5 1)
+            ...
+              (count-change-iter 1 0)
+              (count-change-iter 0 1)       ; ✅  5 + 6 x 1
+          (count-change-iter 1 2)
+            (count-change-iter 1 1)
+              (count-change-iter 1 0)
+              (count-change-iter 0 1)       ; ✅  5 x 2 + 1
+            (count-change-iter (- 4) 2)
+      (count-change-iter 1 3)
+        (count-change-iter 1 2)
+          (count-change-iter 1 1)
+            (count-change-iter 1 0)
+            (count-change-iter 0 1)         ; ✅ 10 + 1
+          (count-change-iter (- 4) 2)
+        (count-change-iter (- 9) 3)
+    (count-change-iter (- 14 4))
+  (count-change-iter (- 39) 5)
+
+; For a change array [a_1, a_2, ..., a_n] and a count N, the way (denoted 
+; as $W$) of changing this count has the following relationship
+;
+;         $W(N, n) = W(N, n - 1) + W(N - a_n, n)
+
+; -----------------------------------------------
+
+; ---------------- Exercise 1.15 ----------------
+
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
+
+; a
+; 12.15 -> 4.05 -> 1.35 -> 0.45 -> 0.15 -> 0.05
+; Totally 5 times
+
+; b
+; $ \Theta(a)=log_3(a) $
+
+; -----------------------------------------------
