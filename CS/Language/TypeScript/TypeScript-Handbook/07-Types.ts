@@ -231,3 +231,122 @@ type Getters<T> = {
   [Property in keyof T as `get${Capitalize<string & Property>}`]: () => T[Property];
 }
 
+// Literal string type is the subtype of 'string', so 'string & property' can
+// force the type of Property to 'string'.
+
+type IsSubtype<T, U>
+  = T extends U
+  ? true
+  : false;
+
+type Is1 = IsSubtype<"Hello", string>;  // Is1: true
+type Is2 = IsSubtype<string, "Hello">;  // Is2: false
+
+interface PersonType {
+  name: string;
+  age: number;
+  location: string;
+}
+
+type GetPerson = Getters<PersonType>;
+// type GetPerson = {
+//   getName: () => string;
+//   getAge: () => number;
+//   getLocation: () => string;
+// }
+
+type RemoveKindField<T> = {
+  [Property in keyof T as Exclude<Property, "kind">]: T[Property];
+}
+
+interface Circle {
+  kind: "circle";
+  radius: number;
+}
+
+type WithoutKindCircle = RemoveKindField<Circle>;
+// type WithoutKindCircle = {
+//   radius: number;
+// }
+
+type ExtractPII<T> = {
+  [Property in keyof T]: T[Property] extends { pii: true } ? true : false;
+}
+
+type DBFieldsPIITrue = {
+  id: {
+    format: "incrementing"
+  };
+  name: {
+    type: string;
+    pii: true;
+  }
+}
+type DB1 = ExtractPII<DBFieldsPIITrue>;
+// type DB1 = {
+//   id: false;
+//   name: true;
+// }
+
+type EmailLocaleIDs =
+  | "welcome_email"
+  | "email_heading";
+
+type FooterLocaleIds =
+  | "footer_title"
+  | "footer_sendoff";
+
+type AllLocaleIDs = `${EmailLocaleIDs | FooterLocaleIds}_id`;
+// type AllLocaleIDs =
+//   | "welcome_email_id"
+//   | "email_heading_id"
+//   | "footer_title_id"
+//   | "footer_sendoff_id";
+
+type PropEventSource1<T extends object> = {
+  on: (
+    eventname: `${string & keyof T}Changed`,
+    callback: (newValue: any) => void
+  ) => void;
+}
+
+declare function makeWatchedObject1<T extends object>(obj: T): T & PropEventSource1<T>;
+
+// 'T' and 'PropEventSource<T>' are both object types, so if 'T' & 'PropEventSource1<T>'
+// is denoted by 'R', then 'R extends T' and 'R extends PropEventSource1<T>' are
+// both true
+
+interface PersonNameAndAge {
+  firstName: string;
+  lastName: string;
+  age: number;
+}
+
+let rawPerson: PersonNameAndAge = {
+  firstName: "Saorise",
+  lastName: "Ronan",
+  age: 26
+};
+const person1 = makeWatchedObject1(rawPerson);
+
+type Is3 = IsSubtype<typeof person1, PersonNameAndAge>;                  // Is3: true
+type Is4 = IsSubtype<typeof person1, PropEventSource1<PersonNameAndAge>>; // Is4: true
+
+person1.on("ageChanged", (newAge) => {
+  console.log(`New age has been changed to ${newAge}`); // newAge is any
+});
+
+type PropEventSource2<T extends object> = {
+  on: <K extends (string & keyof T)>(
+    eventname: `${K}Changed`,
+    callback: (newValue: T[K]) => void
+  ) => void;
+}
+
+declare function makeWatchedObject2<T extends object>(obj: T): T & PropEventSource2<T>;
+
+const person2 = makeWatchedObject2(rawPerson);
+
+person2.on("ageChanged", (newAge) => {
+  console.log(`New age has been changed to ${newAge}`); // newAge is number
+});
