@@ -273,7 +273,7 @@ function getArea1(shape: Shape1): number {
 
     case "circle"  : return Math.PI * shape.radius! ** 2;
     case "square"  : return shape.sideLength! ** 2;
-    case "ellipse" : return Math.PI  * shape.majorAxis! * shape.minorAxis!;
+    case "ellipse" : return Math.PI * shape.majorAxis! * shape.minorAxis!;
 
     // But this doesn't feel ideal. We had to shout a bit at the type-checker
     // with those non-null assertions '!' to convince those properties are
