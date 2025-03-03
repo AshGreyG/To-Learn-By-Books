@@ -431,3 +431,147 @@
 ; $ \Theta(a)=log_3(a) $
 
 ; -----------------------------------------------
+
+; We would like a procedure that takes as arguments a base $b$ and a
+; positive integer exponent $n$ and computes $b^n$. One way to do this is
+; via the recursive definition:
+
+; $
+;   b^n = b * b^{n - 1}
+;   b^0 = 1
+; $
+
+(define (exponent b n)
+  (if (= n 0)
+      1
+      (* b (exponent b (- n 1)))))
+
+; This is a linear recursive process, which requires $\Omega(n)$ steps and
+; $\Omega(n)$ space. We can readily formulate an equivalent linear iteration:
+
+(define (exponent b n)
+  (define (exponent-iter b counter product)
+    (if (= counter 0)
+        product
+        (exponent-iter b
+                       (- counter 1)
+                       (* b product))))
+  (exponent-iter b n 1))
+
+; This version requires $\Omega(n)$ steps and $\Omega(1)$ space.
+
+; We can also take advantage of successive squaring in computing exponential
+; in general if we use the rule:
+
+; $
+;   b^n = (b^{n / 2})^2   if n is even
+;   b^n = b * b^{n - 1}   if n is odd
+; $
+
+(define (fast-exponent b n)
+  (define (square x) (* x x))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-exponent b (/ n 2))))
+        ((odd?  n) (* b (fast-exponent b (- n 1))))))
+
+; Where the predicate to test whether an integer is even is defined in
+; terms of the primitive procedure 'remainder' by
+
+(define (even? n) (= (remainder n 2) 0))
+(define (odd?  n) (= (remainder n 2) 1))
+
+; The process evolved by 'fast-exponent' grows logarithmically with $n$
+; in both space and number of steps. The process has $\Omega{\log n}$
+; growth.
+
+; ---------------- Exercise 1.16 ----------------
+
+; Using the observation that (b^{n / 2})^2 = (b^2)^{n / 2}
+
+; $
+;   a <- a, b <- b * b, n <- n / 2  if n is even
+;     a(b^n) = a(b^2)^{n / 2}
+;   a <- ab, b <- b, n <- n - 1     if n is odd
+;     a(b^n) = ab(b^{n - 1})
+; $
+
+(define (exercise-exponent b n)
+  (define (exercise-exponent-iter a b n)
+    (cond ((= n 0) a)
+          ((even? n) (exercise-exponent-iter 
+                       a
+                       (* b b)
+                       (/ n 2)))
+          (else (exercise-exponent-iter
+                  (* a b)
+                  b
+                  (- n 1)))))
+  (exercise-exponent-iter 1 b n))
+
+; a                     b                     n         
+; 1                     4                     20        
+; 1                     16                    10        
+; 1                     256                   5         
+; 256                   256                   4         
+; 256                   65536                 2         
+; 256                   4294967296            1         
+; 1099511627776         4294967296            0         
+
+; -----------------------------------------------
+
+; ---------------- Exercise 1.17 ----------------
+
+(define (* a b)
+  (if (= b 0)
+      0
+      (+ a (* a (- b 1)))))
+
+; This algorithm takes a number of steps that is linear in 'b'
+
+; Now suppose we include, together with addition, operators 'double', which
+; doubles an integer, and 'halve', which divides an (even) integer by 2,
+; using these, design a multiplication procedure analogous using a logarithmic
+; number of steps.
+
+(define (* a b)
+  (define (double x) (+ x x))
+  (define (halve  x) (/ x 2))
+  (cond ((= b 0) 0)
+        ((even? b) (* (double a) (halve b)))
+        (else (+ a (* a (- b 1))))))    ; This step still needs recurse
+
+; -----------------------------------------------
+
+; ---------------- Exercise 1.18 ----------------
+
+; We should design a middle state variable to record the states.
+
+; a <- 2 * a, b <- b / 2, c <- c  if b is even
+;   a * b = a * (2 * (b / 2)) = (2 * a) * (b / 2)
+; a <- a, b <- b - 1, c <- a + c  if b is odd
+;   a * b + c = a * (1 + (b - 1)) + c = a * (b - 1) + (a + c)
+
+(define (fast-multiple a b)
+  (define (double x) (+ x x))
+  (define (halve  x) (/ x 2))
+  (define (fast-multiple-iter a b c)
+    (cond ((= b 0) c)
+          ((even? b) (fast-multiple-iter
+                       (double a) 
+                       (halve b) 
+                       c))
+          (else (fast-multiple-iter
+                  a 
+                  (- b 1)
+                  (+ a c)))))
+  (fast-multiple-iter a b 0))
+
+; a           b           c         
+; 9           9           0         
+; 9           8           9         
+; 18          4           9         
+; 36          2           9         
+; 72          1           9         
+; 72          0           81        
+
+; -----------------------------------------------

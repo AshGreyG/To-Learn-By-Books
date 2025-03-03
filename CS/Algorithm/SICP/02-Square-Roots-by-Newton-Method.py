@@ -57,4 +57,5 @@ def self_defined_sqrt(x: float) -> float :
     
     return _sqrt_iter(1.0, x)
 
-self_defined_sqrt(0.001)
+if __name__ == "__main__" :
+    self_defined_sqrt(0.001)
