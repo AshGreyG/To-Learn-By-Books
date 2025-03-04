@@ -6,6 +6,7 @@ import FilterableProductTable from './02-Thinking-in-React.tsx';
 import DescribingUI from './03-Describing-the-UI.tsx';
 import AddingInteractivity from './04-Adding-Interactivity.tsx';
 import ManagingState from './05-Managing-State.tsx';
+import EscapeHatches from './06-Escape-Hatches.tsx';
 
 function App() { 
   return (
@@ -19,6 +20,8 @@ function App() {
       <AddingInteractivity />
       <hr />
       <ManagingState />
+      <hr />
+      <EscapeHatches />
     </div>
   );
 }
