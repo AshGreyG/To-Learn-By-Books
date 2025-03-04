@@ -2,7 +2,8 @@ import React, {
   useState,
   useReducer,
   createContext,
-  useContext
+  useContext,
+  ActionDispatch,
 } from "react";
 
 function Form() {
@@ -407,7 +408,7 @@ function TaskAppUsingReducer() {
 // some information available to any component in the tree below it, no matter
 // how deep, without passing it explicitly through props
 
-const LevelContext = createContext<number>(1);
+const LevelContext = createContext<number>(0);
 
 interface HeadingPropType {
   children: React.ReactNode | undefined;
@@ -417,34 +418,248 @@ function Heading({ children }: HeadingPropType) {
   const level: number = useContext<number>(LevelContext);
 
   // 'useContext' tells React that the 'Heading' component wants to read
-  // the 'LevelContext'.
+  // the 'LevelContext'. That would require some way for a child to ask
+  // for data from somewhere above in the tree.
+
+  // 1. Create a context, you can call it 'LevelContext', since it's for 
+  //    the heading level.
+  // 2. Use that context from the component that needs the data. 'Heading'
+  //    will use 'LevelContext'
+  // 3. Provide that context from the component that specifies the data.
+  //    'Section' will provide 'LevelContext'
 
   return (
-    <h1>{children}</h1>
-  )
-}
-
-interface SectionPropType {
-  level: number;
-  children: React.ReactNode | undefined;
-}
-
-function Section({ level, children }: SectionPropType) {
-  return (
-    <section className="section">
-      <LevelContext value={level}>
-        
-      </LevelContext>
-    </section>
+    <>
+      {
+        level === 1 
+          ? ( <h1>{children}</h1> ) 
+          : level === 2 
+          ? ( <h2>{children}</h2> ) 
+          : level === 3 
+          ? ( <h3>{children}</h3> ) 
+          : ( <p> {children}</p> )
+      }
+    </>
   );
 }
 
+interface SectionPropType {
+  children: React.ReactNode | undefined;
+}
+
+function Section({ children }: SectionPropType) {
+  const level: number = useContext<number>(LevelContext);
+  return (
+    <section className="section">
+      <LevelContext.Provider value={level + 1}>
+        {children}
+      </LevelContext.Provider>
+    </section>
+  );
+
+  // Wrap them with a context provider to provide the 'LevelContext' to them.
+  // If any component inside this '<Section>' asks for 'LevelContext', give
+  // them this 'level'. The component will use the value of the nearest
+  // '<LevelContext>' in the UI tree above it.
+
+  // 'Section' now also reads the context from its parent tree, both 'Heading'
+  // and 'Section' read the 'LevelContext' to figure out how deep they are.
+  // And the 'Section' wraps its children into the 'LevelContext' to specify that
+  // anything inside of it as a deeper level.
+}
+
+// Use cases for context
+// 1. Theming: If your app lets the user change its appearance like dark mode,
+//    you can put a context provider at the top of you app, and use that context
+//    in components that need to adjust their visual look
+// 2. Current account: Many components might need to know the currently logged in
+//    user. Putting it in context makes it convenient to read it anywhere in the
+//    tree. Some apps also let you operate multiple accounts at the same time. In
+//    those cases, it can be convenient to wrap a part of the UI into a nested
+//    provider with a different current account value.
+
 function Page() {
   return (
-    <Section level={1}>
+    <Section>
       <Heading>Title</Heading>
+      <Section>
+        <Heading>Heading</Heading>
+        <Heading>Heading</Heading>
+        <Heading>Heading</Heading>
+        <Section>
+          <Heading>Sub-heading</Heading>
+          <Heading>Sub-heading</Heading>
+          <Heading>Sub-heading</Heading>
+        </Section>
+      </Section>
     </Section>
+  );
+}
+
+// When you have tens or hundreds of components in the middle, passing down all
+// state and functions can be quite frustrating! As an alterative to passing them
+// through props, you might want to put both the 'tasks' state and the 'dispatch'
+// function into context.
+
+function tasksContextReducer(tasks: Task[], action: Reducer): Task[] {
+  switch (action.type) {
+    case "added": {
+      return [...tasks, {
+        id: action.id,
+        text: action.text,
+        done: false
+      }];
+    }
+    case "changed": {
+      return tasks.map((t) => {
+        if (t.id === action.task.id) {
+          return action.task;
+        } else {
+          return t;
+        }
+      });
+    }
+    case "deleted": {
+      return tasks.filter((t) => t.id !== action.id);
+    }
+  }
+}
+
+const TasksContext = createContext<Task[]>([]);
+const TasksDispatchContext = createContext<ActionDispatch<[action: Reducer]>>(() => {});
+
+const initialTasks: Task[] = [
+  { id: 0, text: "Visit Kafka Museum", done: true },
+  { id: 1, text: "Watch a puppet show", done: false },
+  { id: 2, text: "Lennon Wall pic", done: false }
+];
+let nextID: number = 2;
+
+function AddTask() {
+  const [text, setText] = useState<string>("");
+  const dispatch 
+    = useContext<React.ActionDispatch<[action: Reducer]>>(TasksDispatchContext);
+
+  return (
+    <>
+      <input 
+        type="text" 
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button onClick={() => {
+        setText("");
+        dispatch({
+          type: "added",
+          id: nextID++,
+          text: text
+        });
+      }}>
+        Add
+      </button>
+    </>
+  );
+}
+
+interface TaskComponentPropType {
+  task: Task;
+}
+
+function TaskComponent({ task }: TaskComponentPropType) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const dispatch
+    = useContext<React.ActionDispatch<[action: Reducer]>>(TasksDispatchContext);
+  let taskContent: React.ReactNode | undefined = undefined;
+
+  if (isEditing) {
+    taskContent = (
+      <>
+        <input 
+          value={task.text}
+          onChange={(e) => {
+            dispatch({
+              type: "changed",
+              task: {
+                ...task,
+                text: e.target.value
+              }
+            });
+          }}
+        />
+        <button onClick={() => setIsEditing(false)}>
+          Save
+        </button>
+      </>
+    );
+  } else {
+    taskContent = (
+      <>
+        {task.text}
+        <button onClick={() => setIsEditing(true)}>
+          Edit
+        </button>
+      </>
+    );
+  }
+
+  return (
+    <label>
+      <input 
+        type="checkbox"
+        checked={task.done}
+        onChange={(e) => {
+          dispatch({
+            type: "changed",
+            task: {
+              ...task,
+              done: e.target.checked
+            }
+          });
+        }}
+      />
+      {taskContent}
+      <button onClick={() => {
+        dispatch({
+          type: "deleted",
+          id: task.id
+        });
+      }}>
+        Delete
+      </button>
+    </label>
+  );
+}
+
+function TaskList() {
+  const tasks = useContext<Task[]>(TasksContext);
+
+  return (
+    <ul>
+      {tasks.map((task) => (
+        <li key={task.id}>
+          <TaskComponent task={task} />
+        </li>
+      ))}
+    </ul>
   )
+}
+
+function TaskAppUsingContextReducer() {
+
+  const [tasks, dispatch]
+    = useReducer<Task[], [action: Reducer]>(tasksContextReducer, initialTasks);
+
+  // The 'TaskAppUsingContextReducer' doesn't need pass any event handlers to the
+  // 'Task' component either. Each component reads the context that it needs.
+  
+  return (
+    <TasksContext.Provider value={tasks}>
+      <TasksDispatchContext.Provider value={dispatch}>
+        <h1>Day off in Kyoto</h1>
+        <AddTask />
+        <TaskList />
+      </TasksDispatchContext.Provider>
+    </TasksContext.Provider>
+  );
 }
 
 function ManagingState() {
@@ -453,8 +668,10 @@ function ManagingState() {
       <Form />
       <Menu />
       <TravelPlan />
+      <Page />
+      <TaskAppUsingContextReducer />
     </>
-  )
+  );
 }
 
 export default ManagingState;
