@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   useRef,
   useState
 } from "react";
@@ -151,12 +152,169 @@ function CatFriends() {
   );
 }
 
+// Challenge 1 Play and pause the video
+
+function VideoPlayer() {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  function handleClick() {
+    if (videoRef && !isPlaying) {
+      videoRef.current?.play();
+      setIsPlaying(true);
+    } else if (videoRef && isPlaying) {
+      videoRef.current?.pause();
+      setIsPlaying(false);
+    }
+  }
+
+  // Because we need the button component to show the current status of
+  // HTMLVideoElement, but using a ref can't do that, so we need an extra
+  // state.
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        { isPlaying ? "Pause" : "Play" }
+      </button>
+      <video 
+        width="250"
+        ref={videoRef}
+      >
+        <source 
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </>
+  )
+}
+
+// Some components need to synchronize with external systems. For
+// example, you might want to control a non-React component based
+// on the React state, set up a server connection, or send an analytics
+// log when a component appears on the screen. *Effects* let you run
+// some code after rendering so that you can synchronize your component
+// with some system outside of React.
+
+// Effects let you specify side effects that are caused by rendering itself,
+// rather than by a particular event. Sending a message in the chat is an
+// event because it is directly caused by the user clicking a specific
+// button. However, setting up a server connection is an Effect because it
+// should happen no matter which interaction caused the component to appear.
+// Effects run at the end of a commit after the screen updates.
+
+// 1. Declare an Effect:
+
+function VideoPlayerUsingEffect() {
+  useEffect(() => {
+    // Code here will run after *every* render
+  }, []);
+
+  // Every time your component renders, React will update the screen and then
+  // run the code inside 'useEffect'. In other words, 'useEffect' delays a
+  // piece of code from running until that render is reflected on the screen.
+
+  // You can tell React to skip unnecessarily re-running the Effect by 
+  // specifying an array of dependencies as the second argument to the
+  // 'useEffect' call
+
+  // Your dependency array is []. This tells React to only run this code when
+  // the component *mounts* (appears on the screen for the first time)
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [text, setText] = useState<string>("");
+
+  useEffect(() => {
+    if (isPlaying) {
+      console.log("Calling video.pause()");
+      videoRef.current?.pause();
+    } else {
+      console.log("Calling video.play()");
+      videoRef.current?.play();
+    }
+  }, [isPlaying, videoRef]);
+
+  // 2. Deal with the dependencies
+
+  // The dependency array can contain multiple dependencies. React will only
+  // skip re-running the Effect if all of the dependencies you specify have
+  // exactly the same values as they had during the previous render.
+
+  // 'videoRef' object has a stable identity: React guarantees you'll always
+  // get the same object from the same 'useRef' call on every render. It never
+  // changes, so it will never by itself cause the Effect to re-run. Therefore,
+  // it does not matter whether you include it or not.
+
+  return (
+    <>
+      <input 
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button onClick={() => setIsPlaying(!isPlaying)}>
+        { isPlaying ? "Pause" : "Play" }
+      </button>
+      <video 
+        src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+        ref={videoRef}
+      />
+    </>
+  );
+}
+
+interface Connection {
+  connect: () => void;
+  disconnect: () => void;
+}
+
+function createConnection(): Connection {
+  return {
+    connect() {
+      alert("✅ Connecting...");
+    },
+    disconnect() {
+      alert("❌ Disconnected.");
+    }
+  };
+}
+
+function ChatRoom() {
+  useEffect(() => {
+    const connection: Connection = createConnection();
+    connection.connect();
+
+    // 3. Add cleanup function
+
+    // The first connection was never destroyed! As the user navigates
+    // across the app, the connections would keep pilling up. To fix
+    // connect twice error, return a *cleanup function* from this Effect
+
+    return () => {
+      connection.disconnect();
+    };
+
+    // Then we would see
+    // ✅ Connecting...
+    // ❌ Disconnected.
+    // ✅ Connecting...
+    //
+    // Remounting components only happens in development to help you find
+    // Effects that need cleanup.
+  }, []);
+  return <h1>Welcome to the chat room!</h1>
+}
+
 function EscapeHatches() {
   return (
     <>
       <Counter />
       <AutoFocus />
       <CatFriends />
+      <VideoPlayer />
+      <VideoPlayerUsingEffect />
+      <ChatRoom />
     </>
   );
 }
