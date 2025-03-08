@@ -1,3 +1,5 @@
+
+
 // To invoke a Java program, we first compile it using the 'javac' command,
 // (which will create a file ends with .class) then run it using the 'java' 
 // command. The '.class' file contains a lower-level version of the program
@@ -85,5 +87,63 @@ public class BasicProgrammingModel {
             sum += a[i];
         }
         return sum / N;
+    }
+    
+    // Copy to another array
+
+    public static double[] copy(double[] a) {
+        int N = a.length;
+        double[] b = new double[N];
+        for (int i = 0; i < N; ++i) {
+            b[i] = a[i];
+        }
+        return b;
+    }
+
+    // Reverse the elements within an array
+
+    public static void reverse(double[] a) {
+        int N = a.length;
+        for (int i = 0; i < N / 2; ++i) {
+            double temp = a[i];
+            a[i] = a[N - i - 1];
+            a[N - i - 1] = temp;
+        }
+    }
+
+    // Matrix-matrix multiplication
+
+    public static double[][] matrixMultiplication(
+        double[][] a, 
+        double[][] b
+    ) {
+        int N = a.length;
+        double[][] c = new double[N][N];
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < N; ++j) {
+                for (int k = 0; k < N; ++k) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return c;
+    }
+
+    // Static methods are called *functions*, each static method is
+    // a sequence of statements that are executed, one after the other,
+    // when the static method is *called*. The modifier *static* distinguishes
+    // thess methods from *instance methods*
+
+    // + Arguments are passed by value.
+    // + Method names can be overloaded.
+    // + A method has a single return value but may have multiple returns statements.
+    // + A method can have side effects.
+
+    // A String is a sequence of characters. A literal String is a sequence of 
+    // characters within double quotes, such as "Hello World.". The data type String
+    // is a Java data type but it isn't a primitive type
+
+    public static void testStandardLibraries() {
+        
     }
 }
