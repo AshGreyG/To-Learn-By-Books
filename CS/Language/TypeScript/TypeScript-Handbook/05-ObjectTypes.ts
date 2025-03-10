@@ -237,11 +237,11 @@ testConflict.name;  // let testConflict.name: never
 
 // We can make a generic 'Box' type which declares a *type parameter*.
 
-interface Box<Type> {
+interface BoxUserDefined<Type> {
   contents: Type;
 }
 
-let stringBox: Box<string> = { contents: "This is a test"  }; // contents: string
+let stringBox: BoxUserDefined<string> = { contents: "This is a test"  }; // contents: string
 
 // 'Array' itself is a generic type.
 

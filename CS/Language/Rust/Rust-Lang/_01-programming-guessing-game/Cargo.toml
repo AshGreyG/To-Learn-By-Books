@@ -1,5 +1,5 @@
 [package]
-name = "rust-lang-1"
+name = "_01-programming-guessing-game"
 version = "0.1.0"
 edition = "2021"
 

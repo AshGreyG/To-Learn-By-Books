@@ -1,7 +1,6 @@
 // use 'cargo new project_name' to setup the project
 // use 'cargo run' to run the project
 
-use core::num;
 use std::io;
 use std::cmp::Ordering;
 
@@ -146,7 +145,7 @@ fn main() {
 
         let test_string: String = String::new();
 
-        let test_num: u32 = match test_string.trim().parse() {
+        let _test_num: u32 = match test_string.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };

@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "rust-lang-2"
+name = "_02-common-programming-concepts"
 version = "0.1.0"

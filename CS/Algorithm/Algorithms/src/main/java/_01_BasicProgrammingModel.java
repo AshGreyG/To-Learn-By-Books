@@ -1,5 +1,3 @@
-
-
 // To invoke a Java program, we first compile it using the 'javac' command,
 // (which will create a file ends with .class) then run it using the 'java' 
 // command. The '.class' file contains a lower-level version of the program
@@ -17,7 +15,11 @@
 // checks for consistency, for example it doesn't permit us to multiply a
 // boolean and a double.
 
-public class BasicProgrammingModel {
+public class _01_BasicProgrammingModel {
+    public static void main(String[] argc) {
+        testStandardLibraries();
+    }
+
     public static void testFunction() {
         int testForInt = 1;
         
@@ -144,6 +146,59 @@ public class BasicProgrammingModel {
     // is a Java data type but it isn't a primitive type
 
     public static void testStandardLibraries() {
-        
+        double testForPrintf = 3.3456312;
+        System.out.print("This is a string for 'print' function");
+        System.out.printf("This is %.5f\n", testForPrintf);
+        System.out.println("This is a string that causes a new line.");
+
+        // The conversion codes of formatted output are
+        //   + d (for decimal values from Java's integer types)
+        //   + f (for floating-point values)
+        //   + s (for String values)
+        // Between the % and conversion code is an integer value that specifies the
+        // field width of the converted value. By default, blank spaces are added
+        // on the left to make the length of the converted output equal to the field
+        // width; if we want the spaces on the right, we can insert a minus sign 
+        // before the field width. If the converted output string is bigger than the
+        // field width, the field width is ignored.
+
+        System.out.printf("%14d", 512);
+        System.out.printf("%-14d", 512);
+        System.out.printf("%14.2f", 1595.16800107543);
+
+        // % java Average < data.txt    
+        //   (redirecting from a file to standard input)
+        // % java RandomSeq 1000 100.0 200.0 > data.txt
+        //   (redirecting standard output to a file)
+        // % java RandomSeq 1000 100.0 200.0 | java Average
+        //   (piping the output of one program to the input of another)
+
+        double testForPositiveInfinity = Double.POSITIVE_INFINITY;
+        double testForNegativeInfinity = Double.NEGATIVE_INFINITY;
+
+        // 1/0 generates a runtime exception for division by zero; 1.0/0.0 has the
+        // value Infinity
+    }
+
+    // ------------ Exercise 1.1.1 ------------
+
+    public static void exercise_1_1_1() {
+        System.out.print((0 + 15) / 2);                     // 7
+        System.out.print(2.0e-6 * 100000000.1);             // 200.0000002
+        System.out.print(true && false || true && false);   // false
+    }
+
+    // ------------ Exercise 1.1.2 ------------
+
+    public static void exercise_1_1_2() {
+        Object a = (1 + 2.236) / 2;
+        Object b = 1 + 2 + 3 + 4.0;
+        Object c = 4.1 >= 4;
+        Object d = 1 + 2 + "3";
+
+        System.out.print(a instanceof Double);  // true
+        System.out.print(b instanceof Double);  // true
+        System.out.print(c instanceof Boolean); // true
+        System.out.print(d instanceof String);  // true
     }
 }

@@ -159,6 +159,7 @@ fn main() {
     const _DECEMBER: &str = _MONTH_NAME[11];
 
     another_test_function();
+    _control_flow();
 }
 
 fn another_test_function() {
@@ -225,5 +226,67 @@ fn _control_flow() {
 
     // The 'loop' keyword tells Rust to execute a block of code over and over again
     // forever until you explicitly tell it to stop. You can place the 'break'
-    // keyword within the loop to tell the program when to stop
+    // keyword within the loop to tell the program when to stop. You can add the
+    // value you want returned after the 'break' expression you use to stop the loop
+
+    let mut counter: i32 = 0;
+    let result: i32 = loop {
+        counter += 1;
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+    println!("The result is {result}!");
+
+    // If you have loops within loops, 'break' and 'continue' apply to the innermost
+    // loop at that point. You can optionally specify a *loop label* on a loop that
+    // you can then use with 'break' or 'continue' to specify that those keywords
+    // apply to the labeled loop instead of the innermost loop. Loop labels must
+    // begin with a single quote
+
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}!");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+
+    let array_test: [i32; 5] = [10, 20, 30, 40, 50];
+    let mut array_index: usize = 0;
+
+    while array_index < array_test.len() {
+        println!("the value is : {}", array_test[array_index]);
+        array_index += 1;
+    }
+
+    // Using the 'for' loop, you wouldn't need to remember to change any other
+    // code if you changed the number of values in the array. The way to do
+    // that would be to use a 'Range', provided by the standard library, which
+    // generates all numbers in sequence starting from one number and ending
+    // before another number
+
+    for number in (1..20).step_by(2) {
+        println!("{number}!");
+    }
+
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+
+    for number in array_test {
+        println!("{number}!");
+    }
 }

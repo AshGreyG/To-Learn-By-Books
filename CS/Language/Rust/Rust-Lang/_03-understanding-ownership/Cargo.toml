@@ -1,5 +1,5 @@
 [package]
-name = "rust-lang-2"
+name = "_03-understanding-ownership"
 version = "0.1.0"
 edition = "2021"
 
