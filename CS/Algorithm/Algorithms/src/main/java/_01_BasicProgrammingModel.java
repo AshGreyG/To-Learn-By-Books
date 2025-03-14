@@ -180,25 +180,17 @@ public class _01_BasicProgrammingModel {
         // value Infinity
     }
 
-    // ------------ Exercise 1.1.1 ------------
+    // There will be only necessary exercises.
 
-    public static void exercise_1_1_1() {
-        System.out.print((0 + 15) / 2);                     // 7
-        System.out.print(2.0e-6 * 100000000.1);             // 200.0000002
-        System.out.print(true && false || true && false);   // false
-    }
+    // ------------ Exercise 1.1.9 ------------
+    
+    public static String toBinaryString(int n) {
+        String result = "";
+        for (int i = n; i > 0; i /= 2) {
+            result = (n % 2) + result;
+        }
+        return result;
 
-    // ------------ Exercise 1.1.2 ------------
-
-    public static void exercise_1_1_2() {
-        Object a = (1 + 2.236) / 2;
-        Object b = 1 + 2 + 3 + 4.0;
-        Object c = 4.1 >= 4;
-        Object d = 1 + 2 + "3";
-
-        System.out.print(a instanceof Double);  // true
-        System.out.print(b instanceof Double);  // true
-        System.out.print(c instanceof Boolean); // true
-        System.out.print(d instanceof String);  // true
+        // Java has a built-in method 'Integer.toBinaryString'
     }
 }

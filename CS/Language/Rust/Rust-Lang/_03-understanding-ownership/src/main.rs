@@ -74,8 +74,9 @@ fn main() {
     // any *automatic* copying can be assumed to be inexpensive in terms of runtime 
     // performance.
 
+    println!("{}", str_2);
     str_2 = String::from("Another string");
-    println!("{str_2}");
+    println!("{}", str_2);
 
     // If we do want to deeply copy the heap data of the 'String', not just the stack data,
     // we can use a common method called 'clone'
@@ -86,6 +87,15 @@ fn main() {
 
     test_for_function();
 }
+
+// +----------+-------+       +-------+-------+
+// |   name   | value |       | index | value |
+// |      ptr | ------+-----> |     0 | H     |
+// |      len | 5     |       |     1 | e     |
+// | capacity | 5     |       |     2 | l     |
+// +----------+-------+       |     3 | l     |
+//                            |     4 | o     |
+//                            +-------+-------+
 
 fn test_for_function() {
     let s: String = String::from("hello");
@@ -101,15 +111,15 @@ fn test_for_function() {
     // println!("{}", s);  // uncomment here, 's' has been moved to the function
     println!("{}", x);
 
-    let s1 = gives_ownership();
+    let _s1 = gives_ownership();
 
-    // 'gives_ownership' moves its return value into 's1'
+    // 'gives_ownership' moves its return value into '_s1'
 
     let s2 = String::from("Hello");
-    let s3 = takes_and_gives_back(s2);
+    let _s3 = takes_and_gives_back(s2);
 
     // 's2' is moved into 'takes_and_gives_back', which also moves its return value
-    // into 's3'
+    // into '_s3'
 }
 fn takes_ownership(some_string: String) {
     println!("{}", some_string);
@@ -126,3 +136,25 @@ fn gives_ownership() -> String {
 fn takes_and_gives_back(input_string: String) -> String {
     return input_string;
 }
+
+// Takeing ownership and then returning ownership with every function is a bit tedious.
+// What if we want to let a function use a value but not take ownership?. Rust does let
+// us return multiple values using a tuple
+
+fn _calculate_length(s: String) -> (String, usize) {
+    let length: usize = s.len();
+    return (s, length);
+}
+
+// We can provide a reference to the 'String' value. A *reference* is like a pointer in
+// that it's an  address we can follow to access the data stored at that address, but
+// the data is owned by some other variable. Unlike a pointer, a reference is guaranteed
+// to a valid value of a particular type
+
+fn _calculate_length_using_ref(s: &String) -> usize {
+    return s.len();
+}
+
+// Reference points to the pointer in the String structure. The opposite of referencing
+// by using '&' is dereferencing, which is accomplished with the dereference operator '*'.
+// 

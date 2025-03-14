@@ -61,3 +61,23 @@ class ExampleClass {
   @second()
   method() {}
 }
+
+// A *Class Decorator* is declared just before a class declaration. The class
+// decorator is applied to the constructor of the class and can be used to
+// observe, modify, or replace a class definition. A class decorator cannot
+// be used in a declaration file, or in any other ambient context.
+
+function sealed(constructor: Function) {
+  Object.seal(constructor);
+  Object.seal(constructor.prototype);
+}
+
+@sealed
+class BugReport {
+  type = "report";
+  title: string;
+
+  constructor(t: string) {
+    this.title = t;
+  }
+}
