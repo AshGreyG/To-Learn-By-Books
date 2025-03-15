@@ -1,7 +1,16 @@
 import java.util.Arrays;
 import java.util.List;
 
+// The modifiers 'public' and 'private', which determine what other classes
+// can access '_01JavaLanguageBasics'. Notice the 'private' modifier can
+// only be applied to the nested classes.
+
 public class _01JavaLanguageBasics {
+
+    // Usually the name of class is with the initial letter capitalized.
+
+    private class Bicycle { }
+
     int instanceVariable = 34;
     static int classVariable = 34;
     static final int CLASS_FINAL_VARIABLE = 34;
@@ -19,6 +28,8 @@ public class _01JavaLanguageBasics {
     //   variable will never change.
     // + Local Variables: They are defined in the closing braces of a
     //   method.
+    // + The 'static' modifier, in combination with the 'final' modifier,
+    //   is also used to define constants
 
     byte    byteInstanceVar     = 127;
     short   shortInstanceVar    = 32767;
@@ -35,6 +46,47 @@ public class _01JavaLanguageBasics {
     // + long   | 64 bit | -2 ^ 63  | 2 ^ 63 - 1
 
     int[] intArray = new int[10];
+
+    // This part defines some real instance variables and functions:
+
+    private int cadence;
+    private int gear;
+    private int speed;
+
+    // The 'public' modifier in field indicates that the field is accessible from all
+    // classes. The 'private' modifier in field indicates that the field is accessible
+    // only within its own class.
+
+    // The class has one constructor
+    // A class declaration has three parts: Field, Constructor, and Method declarations
+
+    public _01JavaLanguageBasics(
+        int startCadence,
+        int startGear,
+        int startSpeed
+    ) {
+        cadence = startCadence;
+        gear = startGear;
+        speed = startSpeed;
+    }
+
+    public void setCadence(int newValue) {
+        cadence = newValue;
+    }
+
+    public void setGear(int newValue) {
+        gear = newValue;
+    }
+
+    public void applyBrake(int decrement) {
+        speed -= decrement;
+    }
+
+    public void speedUp(int increment) {
+        speed += increment;
+    }
+
+    // End of this part
 
     public static void main(String[] args) {
         String[] copyFrom = {
