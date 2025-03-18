@@ -12,7 +12,9 @@ contract Coin {
 
     // 'public' keyword is equivalent to the following code
 
-    function getMinter() external view returns (address) { return minter; }
+    function getMinter() external view returns(address) { 
+        return minter;
+    }
 
     mapping(address => uint) public balances;
 
@@ -20,7 +22,7 @@ contract Coin {
     // function created by the 'public' keyword is more complex in the
     // case of a mapping. It looks like the following:
 
-    function getBalances(address account) external view returns (uint) {
+    function getBalances(address account) external view returns(uint) {
         return balances[account];
     }
 
