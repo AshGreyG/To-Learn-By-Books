@@ -2,10 +2,6 @@
 
 This is my codes and notes collection of book [*THe Rust Programming Language*](https://doc.rust-lang.org/book), and there is my code contents:
 
-+ 1 Getting Started
-  + 1.1 Installation
-  + 1.2 Hello, World!
-  + 1.3 Hello, Cargo!
-+ [2 Programming a Guessing Game](./rust-lang-1/)
-+ [3 Common Programming Concepts](./rust-lang-2/)
-  + 3.1 Variables and Mutability
++ [02 Programming a Guessing Game](./_01-programming-guessing-game/)
++ [03 Common Programming Concepts](./_02-common-programming-concepts/)
++ [04 Understanding Ownership](./_03-understanding-ownership/)
