@@ -8,22 +8,27 @@
 
 = Q1
 
-+ Well ordered. Use $S$ to denote the set of integers greater than 3, we will prove that each subset of $S$ is also the subset of $NN$, and that's easy. Notice that $S subset NN$, so
++ Well ordered. Use $S$ to denote the set of integers greater than 3, we will prove that 
+each subset of $S$ is also the subset of $NN$, and that's easy. Notice that $S ⊂ NN$, so
 
-  $ forall R subset S, R subset NN $
+  $ ∀ R ⊂ S, R ⊂ NN $
 
-  Because $NN$ has the well-ordering property, then every subset of $NN$ has the smallest element. That's to say, each $R$ has a smallest element, so $S$ is well ordered;
+  Because $NN$ has the well-ordering property, then every subset of $NN$ has the smallest 
+  element. That's to say, each $R$ has a smallest element, so $S$ is well ordered;
 
 + Well ordered. Same as 1, we only to prove that this set $S$ is the subset of $NN$;
-+ Not well ordered. Consider the subset ${q | q in QQ and q > 1}$, this subset has no smallest element.
++ Not well ordered. Consider the subset ${q | q ∈ QQ ∧ q > 1}$, this subset has 
+  no smallest element.
 
 + Well ordered. This set can be written as 
 
-  $ S={p | p = a / 2, a in NN} $
+  $ S={p | p = a / 2, a ∈ NN} $
 
-  Consider $forall R subset S$, we have $exists R' subset NN$, satisfying $R={p | p = a \/ 2, a in R'}$. Because $NN$ has the well-ordering property, $R'$ has the smallest element $m$, so $R$ also has the smallest $m\/2$. That's to say $S$ is well ordered.
+  Consider $∀ R ⊂ S$, we have $∃ R' ⊂ NN$, satisfying $R={p | p = a \/ 2, a ∈ R'}$. 
+  Because $NN$ has the well-ordering property, $R'$ has the smallest element $m$, so $R$ 
+  also has the smallest $m\/2$. That's to say $S$ is well ordered.
 
-+ Not well ordered. Same as 3, Consider the subset ${q | q in QQ^+union{0} and q > 1}$.
++ Not well ordered. Same as 3, Consider the subset ${q | q in QQ^+ ∪ {0} ∧ q > 1}$.
 
 = Q2
 
