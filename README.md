@@ -9,7 +9,7 @@ To-Learn-By-Books is a repository recording the books I have read and my learnin
 The content varies from Math, CS to Economics. Every book has its own directory and 
 a `README.md` index, which records the contents of the corresponding book or tutorial.
 
-# 🪜 **Contents**
+## 🪜 **Contents**
 
 + CS
   + Algorithm
@@ -36,17 +36,17 @@ a `README.md` index, which records the contents of the corresponding book or tut
     + Git
       + [Learn Git Branching](./CS/Tool/git/Learn-Git-Branching/)
 
-# ⚠️ **Disclaimer**
+## ⚠️ **Disclaimer**
 
 The author has JUST started learning these books and knowledge, and cannot guarantee 
 that the answers are correct. Please check and compare the information from various 
 channels on the Internet.
 
-# 👏 **Contribute**
+## 👏 **Contribute**
 
 This repository is very private, so PRs are not welcome. However, you are always
 welcome to submit an issue when you find any problems.
 
-# 📄 **License**
+## 📄 **License**
 
 To-Learn-By-Books is distributed under MIT license. See the [LICENSE file](./LICENSE).
