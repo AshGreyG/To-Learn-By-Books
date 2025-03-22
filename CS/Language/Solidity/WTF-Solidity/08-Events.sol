@@ -41,5 +41,9 @@ contract Event {
     // is 32 bytes. For the parameters larger than 32 bytes, such as 'array' and
     // 'string', the hash of the underlying data is stored.
 
-    // Non-indexed parameters will be stored in the 'data' section of the log
+    // Non-indexed parameters will be stored in the 'data' section of the log. They
+    // can be interpreted as the value of the event and can't be retrieved directly.
+    // But they can store data with larger sizes. Therefore, the 'data' section can
+    // be used to store complex data structures, such as 'array' and'string'. 'data'
+    // consumes less gas compared to 'topic'
 }
