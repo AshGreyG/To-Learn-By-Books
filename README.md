@@ -11,30 +11,34 @@ a `README.md` index, which records the contents of the corresponding book or tut
 
 ## 🪜 **Contents**
 
+<div style="font-size: 12px;">
+
 + CS
   + Algorithm
-    + [Algorithms - Fourth Edition - Robert Sedgewick and Kevin Wayne](./CS/Algorithm/Algorithms/)
-    + [Structure and Interpretation of Computer Programs - Second Edition - Harold Abelson and Gerald Jay Sussman with Julie Susssman, foreword by Alan J.Perlis](./CS/Algorithm/SICP/)
+    + [ ] [Algorithms - Fourth Edition - Robert Sedgewick and Kevin Wayne](./CS/Algorithm/Algorithms/)
+    + [ ] [Structure and Interpretation of Computer Programs - Second Edition - Harold Abelson and Gerald Jay Sussman with Julie Susssman, foreword by Alan J.Perlis](./CS/Algorithm/SICP/)
   + Framework
     + React
-      + [React Doc](./CS/Framework/React/react-doc/)
+      + [ ] [React Doc](./CS/Framework/React/react-doc/)
   + Language
     + CSS
-      + [CSS The Definitive Guide (Visual Presentation for the Web) - Eric A.Meyer & Estelle Weyl](./CS/Language/CSS/CSS-The-Definitive-Guide/)
+      + [ ] [CSS The Definitive Guide (Visual Presentation for the Web) - Eric A.Meyer & Estelle Weyl](./CS/Language/CSS/CSS-The-Definitive-Guide/)
     + Java
-      + [Java Dev](./CS/Language/Java/Java-Dev/)
+      + [ ] [Java Dev](./CS/Language/Java/Java-Dev/)
     + JavaScript
-      + [The Modern JavaScript Tutorial](./CS/Language/JavaScript/The-Modern-JavaScript-Tutorial/)
+      + [ ] [The Modern JavaScript Tutorial](./CS/Language/JavaScript/The-Modern-JavaScript-Tutorial/)
     + Rust
-      + [The Rust Programming Language](./CS/Language/Rust/Rust-Lang/)
+      + [ ] [The Rust Programming Language](./CS/Language/Rust/Rust-Lang/)
     + Solidity
-      + [Ethereum Solidity Doc](./CS/Language/Solidity/Solidity-Doc/)
-      + [WTF-Solidity](./CS/Language/Solidity/WTF-Solidity/)
+      + [ ] [Ethereum Solidity Doc](./CS/Language/Solidity/Solidity-Doc/)
+      + [ ] [WTF-Solidity](./CS/Language/Solidity/WTF-Solidity/)
     + TypeScript
-      + [TypeScript Handbook](./CS/Language/TypeScript/TypeScript-Handbook/)
+      + [ ] [TypeScript Handbook](./CS/Language/TypeScript/TypeScript-Handbook/)
   + Tool
     + Git
-      + [Learn Git Branching](./CS/Tool/git/Learn-Git-Branching/)
+      + [ ] [Learn Git Branching](./CS/Tool/git/Learn-Git-Branching/)
+
+</div>
 
 ## ⚠️ **Disclaimer**
 
@@ -42,7 +46,7 @@ The author has JUST started learning these books and knowledge, and cannot guara
 that the answers are correct. Please check and compare the information from various 
 channels on the Internet.
 
-## 👏 **Contribute**
+## 👥 **Contribute**
 
 This repository is very private, so PRs are not welcome. However, you are always
 welcome to submit an issue when you find any problems.
