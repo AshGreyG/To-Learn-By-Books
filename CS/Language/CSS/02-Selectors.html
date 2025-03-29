@@ -160,6 +160,13 @@
     /* The pseudo-class :root selects the root element of the document.
      * In HTML, this is always the <html> element.
      */
+
+    p:empty {
+      display: none;
+    }
+    /* :empty pseudo-class can select any element that has no children of any kind
+     * including text nodes (text and whitespaces). Not include comments
+     */
     
     a[href] > img[src^="https://avatars.githubusercontent.com"][alt]:only-child {
       border: 2px solid black;
@@ -168,8 +175,85 @@
      * only one child, which is exactly this element.
      */
 
+    a[href] img[src^="https://avatars.githubusercontent.com"][alt]:only-of-type {
+      border: 2px solid black;
+    }
+    /* ':only-of-type' pseudo-class matches any element that is the only of its type
+     * among all its siblings.
+     */
     
-    
+    ol.test-for-select > li:first-child {
+      color: red;
+    }
+    ol.test-for-select > li:last-child {
+      color: blue;
+    }
+    ol.test-for-select > li:nth-child(2) {
+      color: orange;
+    }
+    ol.test-for-select > li:nth-last-child(2) {
+      color: blueviolet;
+    }
+    ol.test-for-select > li:nth-child(4n + 3) {
+      color: aqua;
+    }
+    ol.test-for-select > li:nth-child(odd) {
+      font-weight: bolder;
+    }
+    /* Similar to ':only-child', so there are also 'first-of-type' 
+     * and 'last-of-type' ... 
+     */
+
+    a:link {
+      color: darkblue;
+    }
+    a:visited {
+      color: rosybrown;
+    }
+    /* ':link' is the link that user hasn't visited, ':visited' is the opposite */
+
+    .test-ui-state input:enabled {
+      border: 2px solid red;
+    }
+    .test-ui-state input:disabled {
+      border: 2px solid blue;
+    }
+    .test-ui-state input:checked {
+      accent-color: green;
+    }
+    .test-ui-state input:indeterminate {
+      background-color: black;
+      /* Refers to radio buttons or checkboxes that are neither checked nor
+       * unchecked; this state can only be set via DOM scripting.
+       */
+    }
+    .test-ui-state input:default {
+      accent-color: red;
+    }
+    .test-ui-state select:required {
+      border: 2px solid red;
+    }
+    .test-ui-state select:optional {
+      border: 2px solid green;
+    }
+    .test-ui-state input:valid {
+      border: 2px solid green;
+    }
+    .test-ui-state input:invalid {
+      border: 2px solid brown;
+    }
+    .test-ui-state input:in-range:required {
+      border: 2px solid sandybrown;
+    }
+    .test-ui-state input:out-of-range:required {
+      border: 2px solid aliceblue;
+    }
+    .test-ui-state input:read-write {
+      border: 2px solid oldlace;
+    }
+    .test-ui-state input:read-only {
+      border: 2px solid lightpink;
+    }
   </style>
 </head>
 <body>
@@ -258,5 +342,46 @@
     <img src="https://avatars.githubusercontent.com/u/116322429?v=4" alt="No image">
     <em>Ha! Another content!</em>
   </a>
+  <a href="https://www.example.com">
+    <span>
+      <img src="https://avatars.githubusercontent.com/u/116322429?v=4" alt="No image">
+      <em>Oh no there is a span element</em>
+    </span>
+  </a>
+
+  <ol class="test-for-select">
+    <li>first</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>a</li>
+    <li>last</li>
+  </ol>
+
+  <div class="test-ui-state">
+    <input type="text" placeholder="1" class="ui-state" disabled>
+    <input type="text" placeholder="2" class="ui-state">
+    <input type="text" placeholder="3" class="ui-state">
+    <input type="radio" class="ui-state">
+    <input type="checkbox" class="ui-state">
+    <input type="checkbox" class="ui-state" checked>
+    <select required>
+      <option value="option1">Option1</option>
+      <option value="option2">Option2</option>
+    </select>
+    <select>
+      <option value="option1">Option1</option>
+      <option value="option2">Option2</option>
+    </select>
+    <input type="text" pattern="[0-9]*" required>
+    <input type="text" min="1" max="20" required readonly>
+  </div>
 </body>
 </html>
