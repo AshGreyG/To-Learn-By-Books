@@ -13,8 +13,8 @@
 = Exercise 1.13
 
 #theorem(number: "")[
-  Prove that $"Fib"(n)$ is the closest integer to $phi^n \/ sqrt(5)$, 
-  where $phi=(1+sqrt(5))\/2$.
+  Prove that $"Fib"(n)$ is the closest integer to $ϕ^n \/ sqrt(5)$, 
+  where $ϕ=(1+sqrt(5))\/2$.
 ]
 
 #proof[
@@ -22,13 +22,13 @@
 
   $ "Fib"(n)=1/sqrt(5)[((1+sqrt(5))/2)^n-((1-sqrt(5))/2)^n] $
 
-  We will use $phi$ to denote $(1+sqrt(5))\/2$ and $psi$ to denote 
+  We will use $ϕ$ to denote $(1+sqrt(5))\/2$ and $ψ$ to denote 
   $(1-sqrt(5))\/2$ in inline math environment. For $n=0$, we know 
   $"Fib"(0)=(0-0)\/sqrt(5)=0$. For $n=1$
 
   $ "Fib"(1)=1/sqrt(5)((1+sqrt(5))/2-(1-sqrt(5))/2)=1 $
 
-  For $k, k>=1, k in NN$, we assume that $"Fib"(n)$ is such the form 
+  For $k, k>=1, k ∈ NN$, we assume that $"Fib"(n)$ is such the form 
   and so on as $"Fib"(k+1)$, now we want to prove that $"Fib"(k+2)$ 
   is also such form:
 
@@ -45,13 +45,13 @@
   $ (3+sqrt(5))/2=((1+sqrt(5))/2)^2,(3-sqrt(5))/2=((1-sqrt(5))/2)^2 $
 
   So $"Fib"(k+2)$ is also such form. We have proofed that 
-  $"Fib"(n)=(phi^n-psi^n)\/sqrt(5)$. Now we want to prove that $"Fib"(n)$ 
-  is the closest integer of $phi^n\/sqrt(5)$. And that's to prove
+  $"Fib"(n)=(ϕ^n-ψ^n)\/sqrt(5)$. Now we want to prove that $"Fib"(n)$ 
+  is the closest integer of $ϕ^n\/sqrt(5)$. And that's to prove
 
   $ 1/sqrt(5)abs(((1-sqrt(5))/2)^n)=1/sqrt(5)((sqrt(5)-1)/2)^n < 1/2 $
 
-  And that's easy to prove, because $a_n=(-psi)^n\/sqrt(5)$ is a decreasing 
-  geometric sequence. So $a_n <= a_1=-psi\/sqrt(5)$. That's to prove
+  And that's easy to prove, because $a_n=(-ψ)^n\/sqrt(5)$ is a decreasing 
+  geometric sequence. So $a_n <= a_1=-ψ\/sqrt(5)$. That's to prove
 
   $ (5-sqrt(5))/10 < 1/2 $
 
@@ -68,15 +68,15 @@
 ]
 
 #proof[
-  Consider to use a sequence $a_1, a_2, dots.c, a_k$ (assume in ascending 
+  Consider to use a sequence $a_1, a_2, ⋯, a_k$ (assume in ascending 
   order) to denote $k$ kinds of changes which have different denominations
   , and use $N$ to denote the amount.
 
   Since this is a recursive process, the orders of growth of the space is 
   proportional to the depth of the recursive tree. And that's (because 
-  $min(a_1,a_2,dots.c,a_k)=a_1$ can be seen as a constant):
+  $min(a_1,a_2,⋯,a_k)=a_1$ can be seen as a constant):
 
-  $ Theta (N / a_1)=Theta (N) $
+  $ Θ (N / a_1)=Θ (N) $
 
   We focus on counting the call of $sans("counter-change-iter")$, and we use 
   $S(n,m)$ to denote the number of different ways of counting changes for 
@@ -96,15 +96,15 @@
   We have
 
   $ 
-    S(n,2)&=2 floor(n/a_2)+1+sum_(i=0)^(floor(n\/a_1)) S(n-a_2i,1) \
-    &=2 floor(n/a_2)+1+sum_(i=0)^(floor(n\/a_1)) (2 floor((n-a_2i)/a_1)+1) \
-    &=2 floor(n/a_2)+1+floor((2 n^2)/a_1^2+(2n)/a_1^2+(2n)/a_1+1)-sum_(i=0)^
+    S(n,2)&=2 floor(n/a_2)+1+∑_(i=0)^(floor(n\/a_1)) S(n-a_2i,1) \
+    &=2 floor(n/a_2)+1+∑_(i=0)^(floor(n\/a_1)) (2 floor((n-a_2i)/a_1)+1) \
+    &=2 floor(n/a_2)+1+floor((2 n^2)/a_1^2+(2n)/a_1^2+(2n)/a_1+1)-∑_(i=0)^
       (floor(n\/a_1))floor((-2 a_2 i)/a_1) \
-    &approx Theta(n^2)
+    &≈ Θ(n^2)
   $
-  - $m=k$, using the same process above we can have $S(n,k) approx Theta(n^k)$
+  - $m=k$, using the same process above we can have $S(n,k) ≈ Θ(n^k)$
 
-  So the orders of growth of number of steps is $Theta(N^k)$
+  So the orders of growth of number of steps is $Θ(N^k)$
 ]
 
 = Exercise 1.19
@@ -123,9 +123,20 @@
   transformations $T_(p q)$, where $T_(p q)$ transforms the pair $(a,b)$ 
   according to $a <- b q + a q + a p$ and $b <- b p + a q$.
 
-  SHo
+  Show that if we apply such a transformation $T_(p q)$ twice, the effect is
+  the same as using a single transformation $T_(p'q')$ of the same form, and
+  compute $p'$ and $q'$ in terms of $p$ and $q$. 
 ]
 
 #proof[
+  Denote the first pair as $(a_0, b_0)$, then
 
+  $ 
+    (a_0, b_0) -->^(T_(p q)) (a_1, b_1) = & (q b_0 + q a_0 + p a_0, p b_0 + q a_0) \
+    (a_1, b_1) -->^(T_(p q)) (a_2, b_2) = & (q b_1 + q a_1 + p a_1, p b_1 + q a_1) \
+      = & ((q^2 + 2p q) b_0 + (q^2 + 2p q) a_0 + (q^2 + p^2) a_0, \
+        &  (q^2 + p^2) b_0 + (q^2 + 2p q) a_0 )
+  $
+
+  So we have $p' = p^2 + q^2$ and $q' = q^2 + 2p q$
 ]
