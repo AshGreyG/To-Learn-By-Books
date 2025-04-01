@@ -193,4 +193,20 @@ public class _01_BasicProgrammingModel {
 
         // Java has a built-in method 'Integer.toBinaryString'
     }
+
+    // ------------ Exercise 1.1.13 ------------
+
+    public static int[][] transposeMatrix(int[][] matrix) {
+        int M = matrix.length;
+        int N = matrix[0].length;
+        int[][] transposed = new int[N][M];
+
+        for (int i = 0; i < M; ++i) {
+            for (int j = 0; j < N; ++j) {
+                transposed[j][i] = matrix[i][j];
+            }
+        }
+
+        return transposed;
+    }
 }
