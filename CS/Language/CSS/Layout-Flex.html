@@ -1,0 +1,78 @@
+<html>
+<head>
+  <title>Layout-Flex</title>
+  <style>
+    /* Flex is a shorthand property sets how a flex item will grow or shrink to
+     * fit the space available in its flex container.
+     * 
+     * + flex-grow
+     * + flex-shrink
+     * + flex-basis
+     */
+    
+    /* The flex-grow CSS property sets the flex grow factor, which specifies how
+     * much of the flex container's positive free space, if any, should be assigned
+     * to the flex item's main size. If all items have the same 'flex-grow' factor,
+     * the positive free space will be distributed evenly among them
+     */
+
+    /* The flex-shrink CSS property sets the flex shrink factor, which determines
+     * how much the flex item shrink relative to the rest of the flex items in the
+     * flex container when negative free space is distributed.
+     */
+
+    .flex-grow-container {
+      height: 120px;
+      width: 100%;
+      display: flex;
+      align-items: center ;
+      justify-content: center;
+    }
+
+    .flex-grow-container .child {
+      background-color: lightblue;
+      border: 2px solid blue;
+      height: 40px;
+      width: max-content;
+      margin: 0 10px;
+    }
+
+    .flex-grow-container .flex-child-1 { flex: 1 1 auto; }
+    .flex-grow-container .flex-child-2 { flex: 2 1 auto; }
+    .flex-grow-container .flex-child-3 { flex: 2 1 auto; }
+
+    .flex-shrink-container {
+      height: 120px;
+      width: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flex-shrink-container .child {
+      background-color: lightgreen;
+      border: 2px solid green;
+      height: 40px;
+      width: 200px;
+      margin: 0 10px;
+    }
+
+    .flex-shrink-container .flex-child-1 { flex: 1 1 auto; }
+    .flex-shrink-container .flex-child-2 { flex: 1 1 auto; }
+    .flex-shrink-container .flex-child-3 { flex: 1 2 auto; }
+  </style>
+</head>
+
+<body>
+  <div class="flex-grow-container">
+    <div class="flex-child-1 child">Child 1</div>
+    <div class="flex-child-2 child">Child 2</div>
+    <div class="flex-child-3 child">Child 3 but longer</div>
+  </div>
+  <div class="flex-shrink-container">
+    <div class="flex-child-1 child">Child 1</div>
+    <div class="flex-child-2 child">Child 2</div>
+    <div class="flex-child-3 child">Child 3</div>
+  </div>
+</body>
+</html>
