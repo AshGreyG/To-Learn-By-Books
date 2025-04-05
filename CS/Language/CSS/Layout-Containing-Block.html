@@ -1,0 +1,62 @@
+<html>
+<head>
+  <title>Layout-Containing-Block</title>
+  <style>
+    .relative-ancestor {
+      background-color: blue;
+      width: 60px;
+      height: 60px;
+    }
+
+    .son-of-relative-ancestor {
+      background-color: yellow;
+      width: 30px;
+      height: 30px;
+      left: 10px;
+      top: 20px;
+    }
+
+    .absolute-ancestor {
+      background-color: blue;
+      width: 200px;
+      height: 200px;
+    }
+
+    .absolute-ancestor-1 {
+      background-color: yellow;
+      width: 160px;
+      height: 160px;
+      left: 60px;
+      top: 60px;
+    }
+
+    .absolute-ancestor-2 {
+      background-color: red;
+      width: 120px;
+      height: 120px;
+    }
+
+    .son-of-absolute-ancestor {
+      background-color: green;
+      width: 80px;
+      height: 80px;
+      top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="relative-ancestor" style="position: static;">
+    <div class="son-of-relative-ancestor" style="position: relative;"></div>
+  </div>
+
+  <hr>
+
+  <div class="absolute-ancestor" style="position: relative;">
+    <div class="absolute-ancestor-1" style="position: relative;">
+      <div class="absolute-ancestor-2" style="position: static;">
+        <div class="son-of-absolute-ancestor" style="position: absolute;"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
