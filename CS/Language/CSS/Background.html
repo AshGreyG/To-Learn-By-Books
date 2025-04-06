@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title>Background</title>
+  <style>
+    body {
+      background-image: url(https://images.pexels.com/photos/705425/pexels-photo-705425.jpeg);
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-attachment: local;
+    }
+
+    .element {
+      width: 200px;
+      height: 200px;
+    }
+
+    /* The background-attachment property sets whether a background image's
+     * position is fixed within the viewport or scrolls within its containing
+     * block.
+     *
+     *  + fixed
+     *  + scroll
+     *  + local
+     */
+
+    .background-color-set { background-color: green; }
+    .background-clip-set { 
+      background-clip: border-box; 
+      border: 20px double blue;
+    }
+  </style>
+</head>
+<body>
+  <div class="element background-color-set"></div>
+  <div class="element background-clip-set">
+    This is background-clip
+  </div>
+  <div id="overflow-content" style="color: white;"></div>
+  <script>
+    let overflowContent = document.getElementById("overflow-content");
+    for (let i = 0; i < 100; ++i) {
+      overflowContent.innerHTML += "<p>This is an overflow element</p>"
+    }
+  </script>
+</body>
+</html>
