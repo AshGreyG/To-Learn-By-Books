@@ -1,0 +1,88 @@
+<html>
+<head>
+  <title>Layout-Flex-Align-Content</title>
+  <style>
+    /* This property has no effect on single line flex container, so I need
+     * to wrap the children elements
+     */
+    .element {
+      background-color: lightskyblue;
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: max-content;
+    }
+
+    div[class^="content-"] {
+      margin: 20px 0;
+      background-color: lightgoldenrodyellow;
+      display: flex;
+      flex-direction: row;
+      height: 400px;
+      width: 400px;
+      flex-wrap: wrap;
+    }
+
+    .content-start   { align-content: flex-start; }
+    .content-end     { align-content: flex-end; }
+    .content-center  { align-content: center; }
+    .content-between { align-content: space-between; }
+    .content-around  { align-content: space-around; }
+    .content-evenly  { align-content: space-evenly; }
+    .content-stretch {
+      align-content: stretch;
+      > .element {
+        height: auto;
+      }
+    }
+    .content-normal {
+      align-content: normal;
+      > .element {
+        height: auto;
+      }
+    }
+    .content-baseline {
+      align-content: baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .content-first-baseline {
+      align-content: first baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .content-last-baseline {
+      align-content: last baseline;
+      > .element {
+        height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    var body = document.body;
+    var tailwindCSSProperties = [
+      "start", "end", "center",
+      "between", "around", "evenly",
+      "stretch", "normal", "baseline",
+      "first-baseline", "last-baseline"
+    ];
+    tailwindCSSProperties.forEach((prop) => {
+      body.innerHTML += `
+        <div class=\"content-${prop}\">
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+        </div>
+      `
+    });
+  </script>
+</body>
+</html>
