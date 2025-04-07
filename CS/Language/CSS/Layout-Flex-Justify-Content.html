@@ -1,0 +1,73 @@
+<html>
+<head>
+  <title>Layout-Flex-Justify-Content</title>
+  <style>
+    .element {
+      background-color: lightskyblue;
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    div[class^="justify-"] {
+      margin: 20px 0;
+      background-color: lightgoldenrodyellow;
+      display: flex;
+    }
+
+    .justify-start    { justify-content: flex-start; }    /* = start */
+    .justify-center   { justify-content: center; }
+    .justify-end      { justify-content: flex-end; }      /* = end */
+    .justify-between  { justify-content: space-between; }
+    .justify-around   { justify-content: space-around; }
+    .justify-evenly   { justify-content: space-evenly; }
+    .justify-stretch  { 
+      display: grid !important;
+      justify-content: stretch; 
+
+      > .element {
+        width: auto;
+      }
+    }
+    .justify-normal   { 
+      display: grid !important;
+      justify-content: normal; 
+
+      > .element {
+        width: auto;
+      }
+    }
+    .justify-baseline { 
+      display: grid !important;
+      justify-content: baseline; 
+
+      > .element {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    var body = document.body;
+    var tailwindCSSProperties = [
+      "start", "end", "center",
+      "between", "around", "evenly",
+      "stretch", "normal", "baseline"
+    ];
+    tailwindCSSProperties.forEach((prop) => {
+      body.innerHTML += `
+        <div class=\"justify-${prop}\">
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+        </div>
+      `
+    });
+  </script>
+</body>
+</html>

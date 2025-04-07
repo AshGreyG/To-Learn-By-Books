@@ -6,12 +6,19 @@
       background-image: url(https://images.pexels.com/photos/705425/pexels-photo-705425.jpeg);
       background-size: 100%;
       background-repeat: no-repeat;
-      background-attachment: local;
+      background-attachment: fixed;
     }
 
     .element {
+      background-image: url(https://images.pexels.com/photos/705425/pexels-photo-705425.jpeg);
       width: 200px;
       height: 200px;
+      background-size: cover;
+      border: 20px solid transparent;
+      padding: 20px;
+      color: transparent;
+      font-size: xx-large;
+      font-weight: bolder;
     }
 
     /* The background-attachment property sets whether a background image's
@@ -21,19 +28,45 @@
      *  + fixed
      *  + scroll
      *  + local
+     *
+     * The background-origin is ignored when background-attachment is fixed.
      */
 
-    .background-color-set { background-color: green; }
+    .background-color-set { 
+      background-color: green; 
+      width: 200px;
+      height: 200px;
+    }
     .background-clip-set { 
-      background-clip: border-box; 
-      border: 20px double blue;
+      /* background-clip: border-box;  containing border-box */
+      /* background-clip: padding-box; containing padding-box */
+      /* background-clip: content-box; containing content-box */
+      /* background-clip: text; */
+      background-clip: border-area; 
+    }
+    .background-origin-set {
+      /* background-origin: border-box;  origin set to the border box */
+      /* background-origin: content-box; origin set to the content box */
+      background-origin: padding-box;
+    }
+    .background-position-set {
+      background-size: 50% !important;
+      background-repeat: no-repeat;
+      background-position: top;
     }
   </style>
 </head>
+
 <body>
-  <div class="element background-color-set"></div>
+  <div class="background-color-set"></div>
   <div class="element background-clip-set">
     This is background-clip
+  </div>
+  <div class="element background-origin-set">
+    This is background-origin
+  </div>
+  <div class="element background-position-set">
+    This is background-position
   </div>
   <div id="overflow-content" style="color: white;"></div>
   <script>

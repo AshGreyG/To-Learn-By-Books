@@ -1,0 +1,76 @@
+<html>
+<head>
+  <title>Layout-Flex-Align-Items</title>
+  <style>
+    .element {
+      background-color: lightskyblue;
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: max-content;
+    }
+
+    div[class^="items-"] {
+      margin: 20px 0;
+      background-color: lightgoldenrodyellow;
+      display: flex;
+      flex-direction: row;
+      height: 200px;
+    }
+
+    .items-start   { align-items: flex-start; }
+    .items-end     { align-items: flex-end; }
+    .items-center  { align-items: center; }
+    .items-stretch {
+      align-items: stretch;
+      > .element {
+        height: auto;
+      }
+    }
+    .items-baseline {
+      align-items: baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .items-first-baseline {
+      align-items: first baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .items-last-baseline {
+      align-items: last baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .items-self-start { align-items: self-start; }
+    .items-self-end   { align-items: self-end; }
+  </style>
+</head>
+
+<body>
+  <script>
+    var body = document.body;
+    var tailwindCSSProperties = [
+      "start", "end", "center",
+      "stretch", "normal", "baseline",
+      "first-baseline", "last-baseline",
+      "self-start", "self-end"
+    ];
+    tailwindCSSProperties.forEach((prop) => {
+      body.innerHTML += `
+        <div class=\"items-${prop}\">
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+        </div>
+      `
+    });
+  </script>
+</body>
+</html>
