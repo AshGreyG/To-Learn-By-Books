@@ -3,14 +3,14 @@ package utils;
 import java.util.Iterator;
 
 public class Stack<Item> implements Iterable<Item> {
-    private Item[] a = (Item[]) new Object[1];
+    private Item[] a = (Item[]) new Object[0];
 
     // Though the Java compiler gives a warning, the Java system library
     // implementations of similar abstract data types use the same idiom.
     // For historical and technical reasons generic array creation is
     // disallowed in Java
 
-    private int N;
+    private int N = 0;
 
     // + The collection must implement an 'iterator()' method that returns an
     //   'Iterator' object.
@@ -51,18 +51,23 @@ public class Stack<Item> implements Iterable<Item> {
      * @param newItem The item that needs to be added to the stack
      */
     public void push(Item newItem) {
-        if (N == a.length) {
+        if (N == a.length && N != 0) {
             resize(2 * a.length);
+        } else if (N == 0) {
+            resize(1);
         }
         // Using resize 2 * a.length can ensure that the stack will not overflow
-        a[N++] = newItem;
+        a[N] = newItem;
+        N++;
     }
 
     /**
      * @return The top item of stack. Popping it will reset the original space to null
      */
     public Item pop() {
-        Item item = a[--N];
+        if (isEmpty()) return null;
+        Item item = a[N - 1];
+        N--;
         a[N] = null;
         // Notice we use (Item[]) new Object[max] to define the array, so we can use null
         // to initialize or recycle the unused space.

@@ -8,7 +8,7 @@ import utils.Stack;
 public class _02_BasicDataStructures {
 
     public static void main(String[] args) {
-        evaluate("(1 + 2)");
+        evaluate("( 1 + ( 23 * (1 + 8) ) )");
     }
 
     // The notation '<Item>' after the class name in each of APIs defines the
@@ -112,37 +112,47 @@ public class _02_BasicDataStructures {
         Stack<String> ops  = new Stack<String>();
         Stack<Double> vals = new Stack<Double>();
 
-        for (int i = 0; i < expression.length() - 1; ++i) {
-            String s = expression.substring(i, i);
-            String operand = "";
+        String operand = "";
+
+        for (int i = 0; i <= expression.length() - 1; ++i) {
+            String s = expression.substring(i, i + 1);
 
             switch (s) {
-                case "("    : break;
-                case "+"    :
-                case "-"    :
-                case "*"    :
-                case "/"    :
-                case "sqrt" : {
+                case "(" : break;
+                case "+" :
+                case "-" :
+                case "*" :
+                case "/" :
+                case "√" : {
                     ops.push(s); 
-                    vals.push(Double.parseDouble(operand));
+                    try {
+                        vals.push(Double.parseDouble(operand));
+                    } catch (NumberFormatException error) {}
                     operand = "";
                     break;
                 }
-                case ")"    : {
+                case ")" : {
+                    try {
+                        vals.push(Double.parseDouble(operand));
+                    } catch (NumberFormatException error) {}
+                    operand = "";
                     String op = ops.pop();
                     double v = vals.pop();
 
                     switch (op) {
-                        case "+"    : v = vals.pop() + v; break;
-                        case "-"    : v = vals.pop() - v; break;
-                        case "*"    : v = vals.pop() * v; break;
-                        case "/"    : v = vals.pop() / v; break;
-                        case "sqrt" : v = Math.sqrt(v);
+                        case "+" : v = vals.pop() + v; break;
+                        case "-" : v = vals.pop() - v; break;
+                        case "*" : v = vals.pop() * v; break;
+                        case "/" : v = vals.pop() / v; break;
+                        case "√" : v = Math.sqrt(v);
                     }
                     vals.push(v);
                     break;
                 }
-                default     : operand += s; break;
+                default : {
+                    operand += s;
+                    break;
+                }
             }
         }
         System.out.println(vals.pop());
