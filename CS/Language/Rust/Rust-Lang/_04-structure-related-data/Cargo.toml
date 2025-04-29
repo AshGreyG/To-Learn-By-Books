@@ -1,0 +1,6 @@
+[package]
+name = "_04-structure-related-data"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
