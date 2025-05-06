@@ -86,6 +86,25 @@ fn main() {
     println!("str_clone_1 = {str_clone_1}, str_clone_2 = {str_clone_2}");
 
     test_for_function();
+    test_slice_string();
+    test_from_start_slice();
+    test_to_end_slice();
+    test_complete_slice();
+
+    let str_3 = String::from("Love you Huaier");
+    let str_literal_3 = "Love you Huaier";
+    println!(
+        "Test correct first word for \"Love you Huaier\": {}", 
+        correct_first_word(&str_3)  // Love
+    );
+
+    println!(
+        "Test scalable first word for \"Love you Huaier\": {} {} {} {}",
+        scalable_first_word(&str_3[..]),            // Love
+        scalable_first_word(&str_3[..2]),           // Lo
+        scalable_first_word(str_literal_3),         // Love
+        scalable_first_word(&str_literal_3[..2])    // Lo
+    );
 }
 
 // +----------+-------+       +-------+-------+
@@ -129,12 +148,12 @@ fn makes_copy(some_integer: i32) {
 }
 fn gives_ownership() -> String {
     let some_string = String::from("Huaier");
-    return some_string;
+    some_string
     // 'gives_ownership' will move its return value into the function that call it.
     // 'some_string' is returned and moves out to the calling function
 }
 fn takes_and_gives_back(input_string: String) -> String {
-    return input_string;
+    input_string
 }
 
 // Takeing ownership and then returning ownership with every function is a bit tedious.
@@ -143,18 +162,122 @@ fn takes_and_gives_back(input_string: String) -> String {
 
 fn _calculate_length(s: String) -> (String, usize) {
     let length: usize = s.len();
-    return (s, length);
+    (s, length)
 }
 
 // We can provide a reference to the 'String' value. A *reference* is like a pointer in
-// that it's an  address we can follow to access the data stored at that address, but
+// that it's an address we can follow to access the data stored at that address, but
 // the data is owned by some other variable. Unlike a pointer, a reference is guaranteed
 // to a valid value of a particular type
 
 fn _calculate_length_using_ref(s: &String) -> usize {
-    return s.len();
+    s.len()
 }
 
 // Reference points to the pointer in the String structure. The opposite of referencing
 // by using '&' is dereferencing, which is accomplished with the dereference operator '*'.
-// 
+// We call the action taking ownership as *borrow*
+
+// Normal reference cannot be changed in function, but we can use mutable reference to
+// modify it: (If we have a mutable reference to a variable, that we cannot have other
+// references to that variable. This principle is designed to fix the data race problem)
+
+fn _change_string(s: &mut String) {
+    s.push_str("hello");
+}
+
+// A dangling reference refers to the freed memory space:
+
+// fn _dangle_reference() -> &String {
+//     let s: String = String::from("This");
+//     &s
+// }
+
+fn _first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+    // Convert string to bytes array
+    for (i, &item) in bytes.iter().enumerate() {
+        // + 'iter' is a method that returns each element in a collection
+        // + 'enumerate' is a method that wraps the index and reference to
+        //   the data as a tuple.
+        if item == b' ' {
+            return i;
+        }
+    }
+    s.len()
+}
+
+// However, this function has a big problem: consider we have a String variable 's' and
+// we use '_first_word" to get the first word end index of 's', when 's' is cleared, 
+// the first word end index is still the first value (that means the result is not related
+// to 's', they are not kept in sync).
+
+// Rust has method to solve this problem: the reference to string slices:
+// A string slice is a reference to part of a `String`, and it looks like this
+
+fn test_slice_string() {
+    let s = String::from("hello world!");
+    let hello = &s[0..5];
+    let world = &s[6..11];
+    println!("From test_slice_string: {}", hello);  // hello
+    println!("From test_slice_string: {}", world);  // world
+}
+
+// With Rust's '..' range syntax, if we want to start at index 0, we can drop the value before
+// the two periods. And if we want to include the last byte of the 'String', we can drop the
+// trailing number. 
+
+fn test_from_start_slice() {
+    let s = String::from("hello");
+    let slice_1 = &s[0..2];
+    let slice_2 = &s[..2];
+    println!("From test_from_start_slice: {}", slice_1);    // he
+    println!("From test_from_start_slice: {}", slice_2);    // he
+}
+
+fn test_to_end_slice() {
+    let s = String::from("hello");
+    let slice_1 = &s[3..s.len()];
+    let slice_2 = &s[3..];
+    println!("From test_to_end_slice: {}", slice_1);    // lo
+    println!("From test_to_end_slice: {}", slice_2);    // lo
+}
+
+fn test_complete_slice() {
+    let s = String::from("hello");
+    let slice_1 = &s[0..s.len()];
+    let slice_2 = &s[..];
+    println!("From test_complete_slice: {}", slice_1);  // hello
+    println!("From test_complete_slice: {}", slice_2);  // hello
+}
+
+// For the purposes of introducing string slices, we are assuming ASCII only.
+
+fn correct_first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
+// let s = "Hello World";
+// The type of 's' here is '&str': it's a slice pointing to that specific point of
+// the binary, &str is an immutable reference.
+
+// Defining a function to take a string slice instead of a reference to a `String`
+// makes our API more general and useful without losing any functionality.
+
+fn scalable_first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}

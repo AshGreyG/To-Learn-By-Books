@@ -159,7 +159,7 @@ fn main() {
     const _DECEMBER: &str = _MONTH_NAME[11];
 
     another_test_function();
-    _control_flow();
+    control_flow();
 }
 
 fn another_test_function() {
@@ -195,10 +195,10 @@ fn function_has_parameter(x: i32) {
 }
 
 fn function_has_returns(x: i32) -> i32 {
-    return x + 1;   // or just 'x + 1'
+    x + 1
 }
 
-fn _control_flow() {
+fn control_flow() {
     let number = 3;
 
     if number < 5 {
