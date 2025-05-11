@@ -68,12 +68,66 @@ def spaceBetween (before : String) (after : String) : String :=
 def joinStringsWith (a : String) (b : String) (c : String) : String :=
   String.append (String.append b a) c
 
+def volume (a : Nat) (b : Nat) (c : Nat) : Nat :=
+  a * b * c
+
 #check (joinStringsWith : String → String → String → String)
 #check (joinStringsWith "," : String → String → String)     -- Curry 🔥
+#check (volume : Nat → Nat → Nat → Nat)
 
 -- Types are a first-class part of the language, they are also expressions
 -- like any other. And this is possible use `Str` as a definition's type
 
 def Str : Type := String
-
 def test_str_type : Str := "This is a Str variable"
+
+-- Lean allows number literals to be **overloaded**, when it makes sense to
+-- do so, natural numbers can be used for new types
+
+def NaturalNumber : Type := Nat
+-- def test_nat_type : NaturalNumber := 12 -- uncomment here   It's polymorphic 🤔
+-- We can provide type declaration to make this correct
+def test_nat_type : NaturalNumber := (12 : Nat)
+-- Or we can define the new name of `Nat` using `abbrev` instead of `def` allows
+-- overloading resolution to replace the defined name with its definition
+abbrev ℕ : Type := Nat
+def thirtyNine : ℕ := 39
+
+------------------------ 1.4 Structures ----------------------
+
+#check 1.2          -- Float
+#check true         -- Bool
+#check (0 : Float)  -- Float
+
+-- A Cartesian point is a structure with two `Float` fields `x` and `y`
+
+structure Point where
+  x : Float
+  y : Float
+deriving Repr
+
+-- The final line asks Lean to generate code to display values of type `Point`
+-- This code is used by `#eval` to render the result of evaluation for consumption
+-- by programmers.
+
+def origin : Point := {
+  x := 0.0,
+  y := 0.0
+}
+#eval origin    -- { x := 0.000000 y := 0.000000 }
+#eval origin.x  -- 0.000000
+#eval origin.y  -- 0.000000
+
+def addPoints (p1 : Point) (p2 : Point) : Point :=
+  { x := p1.x + p2.x, y := p1.y + p2.y }
+
+def distance (p1 : Point) (p2 : Point) : Float :=
+  Float.sqrt (((p1.x - p2.x) ^ 2.0) + ((p1.y - p2.y) ^ 2.0))
+
+#eval addPoints { x := 1.0, y := 3.0 } { x := 0.0, y := 1.0 }   -- { x := 1.000000, y := 4.000000}
+#eval distance { x := 1.0, y := 3.0 } { x := 0.0, y := 1.0 }    -- 2.232068
+
+structure Point3D where
+  x : Float
+  y : Float
+deriving Repr
