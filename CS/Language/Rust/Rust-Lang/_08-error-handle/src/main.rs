@@ -77,14 +77,14 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
     let mut username_file = match username_file_result {
         Ok(file) => file,
-        Err(e) => return Err(e),
+        Err(e) => return Err(e),    // Return an `io::Error`
     };
 
     let mut username = String::new();
 
     match username_file.read_to_string(&mut username) {
-        Ok(_) => Ok(username),
-        Err(e) => Err(e),
+        Ok(_) => Ok(username),      // Return a `String`
+        Err(e) => Err(e),           // Return an `io::Error`
     }
 }
 
@@ -98,5 +98,30 @@ fn shorter_read_username() -> Result<String, io::Error> {
     Ok(username)
 }
 
-// There is a difference between what the 'match' expression and what the '?' operator
-// does 
+// Error values that have the `?` operator called on them go through the `from` function,
+// defined in the `Form` trait in the standard library, which is used to convert values
+// from one type into another.
+
+// We could change the `shorter_read_username` function to return a custom error type
+// named `MyError` if we also define `impl From<io::Error>` for `MyError` to construct
+// an instance of `MyError` from an `io::Error`, then the `?` operator can convert
+// `io::Error` to `MyError`
+
+fn even_shorter_read_username() -> Result<String, io::Error> {
+    let mut username = String::new();
+    File::open("hello.txt")?.read_to_string(&mut username)?;
+    Ok(username)
+
+    // And this is equal to `std::fs::read_to_string("hello.txt")`
+    // We can consider the ? operator similar to JavaScript optional chain operator but
+    // this will return the error result early.
+}
+
+// ? operator can also be used in `Optional<T>` return type
+
+fn last_char_of_first_line(text: &str) -> Option<char> {
+    text.lines().next()?.chars().last()
+
+    // `next()` return type is `Option<str>`, use ? to use methods for `Some` or return
+    // `None` early.
+}
