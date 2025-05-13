@@ -130,4 +130,82 @@ def distance (p1 : Point) (p2 : Point) : Float :=
 structure Point3D where
   x : Float
   y : Float
+  z : Float
 deriving Repr
+
+#check ({ x := 0.0, y := 0.0} : Point)
+#check { x := 0.0, y := 0.0 : Point}
+
+-- To make programs more concise, Lean also allows the structure type annotation inside
+-- the curly braces.
+
+def unmaintainableZeroX (p : Point) : Point :=
+  { x := 0, y := p.y }
+
+-- If a new field is added to the structure `Point`, then the code like this function
+-- should all be updated, causing maintenance difficulties
+
+def zeroX (p : Point) : Point :=
+  { p with x := 0 }
+
+-- It's like the spread syntax of JavaScript
+
+-- Every structure has a *constructor*, unlike constructors in languages such as Java
+-- or Python, constructors in Lean are not arbitrary code to be run when a datatype
+-- is initialized. Instead, constructors simply gather the data to be stored in the
+-- newly-allocated data structure. It's not possible to provide a custom constructor
+-- that pre-processes data or rejects invalid arguments.
+
+-- By default, the constructor for a structure named `S` is named `S.mk`.
+-- Constructors have function types:
+
+#check Point.mk 1.5 2.8
+#check (Point.mk : Float → Float → Point)
+
+-- To override a structure's constructor name, write it with two colons at the beginning
+
+structure PointWithOverridden where
+  point ::
+  x : Float
+  y : Float
+deriving Repr
+
+#check (PointWithOverridden.point : Float → Float → PointWithOverridden)
+#check (PointWithOverridden.x : PointWithOverridden → Float)
+#check (PointWithOverridden.y : PointWithOverridden → Float)
+
+#eval Point.x origin  -- 0.000000, it's like `String.append ...`
+
+-- Accessor dot notation is usable with more than just structure fields, it can also
+-- be used for functions that take any number of arguments. Accessor notation has
+-- the form `TARGET.f ARG1 ARG2 ...`, if `TARGET` has type `T`, then `T.f` is called.
+-- `TARGET` becomes its leftmost argument of type `T`
+
+#eval "one string".append " and another"
+
+-- Even though the `Point` argument comes after the function argument, it can be
+-- used with dot notation as well
+
+def Point.modifyBoth (f : Float → Float) (p : Point) : Point :=
+  { x := f p.x, y := f p.y }
+
+#eval { x := 3.45, y := 9.87 : Point}.modifyBoth Float.floor  -- { x := 3.000000, y := 9.000000}
+
+structure RectangularPrism where
+  height : Float
+  width : Float
+  depth : Float
+deriving Repr
+
+def RectangularPrism.volume (rec : RectangularPrism) : Float :=
+  rec.height * rec.width * rec.depth
+
+#eval { height := 1.2, width := 1.2, depth := 2.3 : RectangularPrism }.volume -- 3.312000
+
+structure Segment where
+  startPoint : Point
+  endPoint : Point
+deriving Repr
+
+def Segment.length (s : Segment) : Float :=
+  distance s.startPoint s.endPoint
