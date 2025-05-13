@@ -209,3 +209,96 @@ deriving Repr
 
 def Segment.length (s : Segment) : Float :=
   distance s.startPoint s.endPoint
+
+------------------------ 1.5 Datatype and Patterns ----------------------
+
+-- Types such as structures that group together a collection of values are called
+-- **product types**. Types that allow choices are called **sum types** and can
+-- include instances of themselves are called **recursive datatypes**. Recursive
+-- sum types are called **inductive datatypes**, because mathematical induction
+-- may be used to prove statements about them. Inductive datatypes are consumed
+-- through **pattern matching** and **recursive functions**
+
+inductive MyBool where
+  | myFalse : MyBool
+  | myTrue : MyBool
+
+-- The first line provides the name of the new type `MyBool`, while the remaining
+-- lines each describe a constructor. Constructors of inductive datatypes may have
+-- multiple constructors. Here there are two constructors: `myFalse` and `myTrue`,
+-- and neither takes any arguments.
+
+inductive MyNat where
+  | zero : MyNat
+  | succ (n : MyNat) : MyNat
+
+-- `zero` represents 0, while `succ` represents the successor of some other number.
+-- The `MyNat` mentioned in `succ`'s declaration is the very type `MyNat` that is
+-- in the process of being defined. Using this definition, `4` is represented as
+--
+-- `MyNat.succ (MyNat.succ (MyNat.succ (MyNat.succ MyNat.zero)))`
+
+def isZero (n : Nat) : Bool :=
+  match n with
+  | Nat.zero => true
+  | Nat.succ _ => false
+
+-- The `match` expression is provided the function's argument `n` for destructuring.
+-- If `n` was constructed by `Nat.zero`, then the first branch of the pattern match
+-- is taken. If `n` was constructed by `Nat.succ`, then the second branch is taken.
+
+#eval isZero 0                    -- true
+#eval isZero Nat.zero             -- true
+#eval isZero 1                    -- false
+#eval isZero (Nat.succ Nat.zero)  -- false
+
+def pred (n : Nat) : Nat :=
+  match n with
+  | Nat.zero => Nat.zero
+  | Nat.succ k => k
+
+#eval pred 0
+#eval pred 890
+
+-- Pattern matching can be used with structures as well as with sum types. For instance,
+-- a function that extracts the third dimension from a `Point3D` can be written as
+
+def depth (p : Point3D) : Float :=
+  match p with
+  | { x := _, y := _, z := d } => d
+
+-- Definitions that refer to the name being defined are called **recursive definitions**.
+-- Inductive datatypes are allowed to be recursive
+
+def even (n : Nat) : Bool :=
+  match n with
+  | Nat.zero => true
+  | Nat.succ k => not (even k)
+
+#eval even 3    -- false
+#eval even 20   -- true
+
+def plus (n : Nat) (k : Nat) : Nat :=
+  match k with
+  | Nat.zero => n
+  | Nat.succ k' => Nat.succ (plus n k')
+
+#eval plus 3 2  -- 5
+
+-- With two middle state variables: $n+k$ applies `Nat.succ` $k$ times to $n$. Similarly,
+-- multiplication $n×k$ adds $n$ to itself $k$ times and subtraction $n-k$ takes $n$'s
+-- predecessor $k$ times.
+
+def times (n : Nat) (k : Nat) : Nat :=
+  match k with
+  | Nat.zero => Nat.zero
+  | Nat.succ k' => plus n (times n k')
+
+#eval times 3 9 -- 27
+
+def minus (n : Nat) (k : Nat) : Nat :=
+  match k with
+  | Nat.zero => n
+  | Nat.succ k' => pred (minus n k')
+
+#eval minus 3 2 -- 1
