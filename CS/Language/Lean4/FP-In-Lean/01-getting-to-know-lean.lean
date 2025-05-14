@@ -302,3 +302,37 @@ def minus (n : Nat) (k : Nat) : Nat :=
   | Nat.succ k' => pred (minus n k')
 
 #eval minus 3 2 -- 1
+
+------------------------ 1.6 Polymorphism ----------------------
+
+-- Types in Lean can take arguments, the type `List Nat` describes lists of natural
+-- numbers, `List String` describes list of strings. That's very similar to `List<Nat>`
+-- `List<String>`.
+
+-- In functional programming, the term **polymorphism** typically refers to datatypes
+-- and definitions that take types as arguments.
+
+structure TPoint (α : Type) where
+  x : α
+  y : α
+deriving Repr
+
+def natOrigin : TPoint Nat := {
+  x := Nat.zero,
+  y := Nat.zero
+}
+def floatOrigin : TPoint Float := {
+  x := 0.0,
+  y := 0.0
+}
+
+-- Definitions may also take types as arguments, which makes them polymorphic.
+
+def replaceX (α : Type) (point : TPoint α) (newX : α) : TPoint α :=
+  { point with x := newX }
+
+-- When the types of the arguments `point` and `newX` mention `α`, they are referring
+-- to **whichever type was provided as the first argument**.
+
+#check (replaceX)   -- (α : Type) → TPoint α → α → TPoint α
+#check replaceX Nat -- TPoint Nat → Nat → TPoint Nat
