@@ -336,3 +336,166 @@ def replaceX (α : Type) (point : TPoint α) (newX : α) : TPoint α :=
 
 #check (replaceX)   -- (α : Type) → TPoint α → α → TPoint α
 #check replaceX Nat -- TPoint Nat → Nat → TPoint Nat
+#eval replaceX Nat natOrigin 5  -- { x := 5, y := 0 }
+
+inductive Sign where
+  | pos
+  | neg
+
+def returnPosOrNeg (s : Sign) : match s with | Sign.pos => Nat | Sign.neg => Int :=
+  match s with
+  | Sign.pos => (3 : Nat)
+  | Sign.neg => (-3 : Int)
+
+-- Pattern matching can also happen in type level.
+
+#eval returnPosOrNeg Sign.pos -- 3
+
+-- Lean's standard library includes a canonical linked list datatype, called `List`.
+-- Lists are written in square brackets. List is an inductive datatype
+
+def primesUnder10 : List Nat := [2, 3, 5, 7]
+
+inductive MyList (α : Type) where
+  | nil : MyList α
+  | cons : α → MyList α → MyList α
+
+-- The constructor `nil` represents empty lists and the constructor `nil` is used for
+-- non-empty lists.
+-- The first argument to `cons` is the **head** of the list, and the second one is its
+-- **tail**. A list that contains $n$ entries contains $n$ `cons` constructor, the last
+-- of which has `nil` as its tail.
+
+def explicitPrimesUnder10 : List Nat :=
+  List.cons 2 (List.cons 3 (List.cons 5 (List.cons 7 List.nil)))
+
+def MyList.length (α : Type) (xs : MyList α) : Nat :=
+  match xs with
+  | MyList.nil => Nat.zero
+  | MyList.cons _ ys => Nat.succ (length α ys)
+
+def useMyList : MyList String :=
+  MyList.cons "a" (MyList.cons "b" (MyList.cons "c" MyList.nil))
+
+#eval MyList.length String useMyList  -- 3
+
+-- MyList.length String useMyList
+-- ===>
+-- Nat.succ (MyList.length String (MyList.cons "b" (MyList.cons "c" MyList.nil)))
+-- ===>
+-- Nat.succ (Nat.succ MyList.length String (MyList.cons "c" MyList.nil)))
+-- ===>
+-- Nat.succ (Nat.succ (Nat.succ Nat.zero))
+-- ===>
+-- 3
+
+-- To make it easier to read functions on lists, the bracket notation `[]` can be used
+-- to pattern match against `nil`, and an infix `::` can be used in place of `cons`:
+
+def List.readableLength (α : Type) (xs : List α) : Nat :=
+  match xs with
+  | [] => 0
+  | _ :: ys => Nat.succ (readableLength α ys)
+
+-- The type argument is typically uniquely determined by the later values. In most
+-- languages, the compiler is perfectly capable of determining type arguments on its
+-- own. Arguments can be declared **implicit** by wrapping them in curly braces.
+
+def List.implicitLength {α : Type} (xs : List α) : Nat :=
+  match xs with
+  | [] => 0
+  | _ :: ys => Nat.succ (implicitLength ys)
+
+-- Like Rust, Lean provides a datatype called `Option` that equips some other type
+-- with an indicator for missing values. For instance, a nullable `Int` is represented
+-- by `Option Int`
+
+inductive MyOption (α : Type) : Type where
+  | none : MyOption α
+  | some (val : α) : MyOption α
+
+-- `Option (Option Int)` can be constructed with `none`, `some none` or `some (some ...)`.
+-- Kotlin treats `T??` as being equivalent to `T?`, but Lean doesn't
+
+def testOptionWrap : Option (Option Nat) := none
+-- #check (testOptionWrap : Option Nat) -- uncomment, it matters
+
+def MyList.head? {α : Type} (xs : MyList α) : MyOption α :=
+  match xs with
+  | MyList.nil => MyOption.none
+  | MyList.cons y _ => MyOption.some y
+
+-- A Lean naming convention is to defined operations that might fail in
+-- + groups using the suffix `?` for a version that returns an `Option`
+-- + `!` for a version that crashes when provided with invalid input
+-- + `D` for a version that returns a default value when the operation would otherwise
+--   fail.
+
+#eval [].head? (α := Nat) -- none
+
+-- When just use [] to denote an empty List, Lean is unable to fully determine the
+-- expression's type. In Lean'output, `?m.XYZ` represents a part of program that
+-- could not be inferred. These unknown parts are called **metavariables**. In
+-- order to evaluate an expression, Lean needs to be able to find its type.
+-- We can explicitly provide a type.
+
+#eval ([] : List Nat).head? -- none
+
+-- The `Prod` structure, short for Product, is a generic way of joining two values
+-- together. A `Prod Nat String` contains a `Nat` and a `String`
+
+structure MyProd (α : Type) (β : Type) : Type where
+  fst : α
+  snd : β
+
+-- In Lean standard library, the type `Prod α β` is typically written as `α × β`
+-- mirroring the usual notation for a Cartesian product of sets.
+
+def fivesCartesian : String × Int := {
+  fst := "five",
+  snd := 5
+}
+
+def fivesParentheses : String × Int := ("five", 5)
+
+-- Both notations are right-associative, this means that the following definitions
+-- are equivalent:
+
+def sevens1 : String × Int × Nat := ("VII", 7, 4 + 3)
+def sevens2 : String × (Int × Nat) := ("VII", (7, 4 + 3))
+
+-- The `Sum` datatype is a generic way of allowing a choice between values of two
+-- different types. For instance, a `Sum String Int` is either a `String` or an `Int`
+
+inductive MySum (α : Type) (β : Type) : Type where
+  | inl : α → MySum α β
+  | inr : β → MySum α β
+
+-- These names are abbreviations for "left injection" and "right injection"
+-- The type `Sum α β` is typically written as `α ⊕ β`
+
+def PetName : Type := String ⊕ String
+
+def animals : List PetName := [
+  Sum.inl "Spot", Sum.inr "Tiger", Sum.inl "Fifi", Sum.inl "Rex", Sum.inr "Floof"
+]
+
+def howManyDogs (pets : List PetName) : Nat :=
+  match pets with
+  | [] => 0
+  | Sum.inl _ :: morePets => howManyDogs morePets + 1
+  | Sum.inr _ :: morePets => howManyDogs morePets
+
+#eval howManyDogs animals -- 3
+
+-- `Unit` is a type with just one argumentless constructor, called `unit`. It describes
+-- only a single value, which consists of said constructor applied to no arguments
+
+inductive MyUnit : Type where
+  | unit : MyUnit
+
+-- All Lean functions have arguments, zero-argument functions in other languages can
+-- be represented as functions that take a `Unit` argument. In a return position, the
+-- `Unit` type is similar to `void` in languages derived from `C`
+
+-- The `Empty` datatype has no constructors, thus it indicates unreachable code
