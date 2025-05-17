@@ -561,3 +561,81 @@ def multiplication {α : Type} (a : Bool × α) : α ⊕ α :=
   match a.fst with
   | true  => Sum.inl a.snd
   | false => Sum.inr a.snd
+
+------------------------ 1.7 Additional Conveniences ----------------------
+
+-- Automatic implicit parameters
+
+-- When writing polymorphic functions in Lean, it is typically not necessary to
+-- list all the implicit parameters. Instead they can simply mentioned.
+
+def implicitLength (xs : List α) : Nat :=
+  match xs with
+  | [] => 0
+  | _ :: ys => Nat.succ (implicitLength ys)
+
+#eval implicitLength [1, 2, 3]  -- 3
+
+-- Pattern matching definitions
+
+-- When defining functions with `def`, it is quite common to name an argument and
+-- then immediately use it with pattern matching. For instance, in `implicitLength`
+-- the argument `xs` is used only in `match`. In these situations, the cases of the
+-- `match` expression can be written directly
+
+def directPatternMatchLength : List α → Nat
+  | [] => 0
+  | _ :: ys => Nat.succ (directPatternMatchLength ys)
+
+#eval directPatternMatchLength [1, 2, 3]  -- 3
+
+-- This syntax can be also be used to define functions that take more than one
+-- argument. In this case, their patterns are separated by commas. For instance
+-- `drop` takes a number $n$ and a list, and returns the list after removing
+-- the first $n$ entries
+
+def directPatternMatchDrop : Nat → List α → List α
+  | 0, xs => xs
+  | _, [] => []
+  | Nat.succ n, _ :: xs => directPatternMatchDrop n xs
+
+#eval directPatternMatchDrop 3 [2, 1, 5, 5, 7, 4] -- [5, 7, 4]
+
+-- Local definitions
+
+-- It is often useful to name intermediate steps in a computation. `unzip` is a
+-- function that transforms a list of pairs into a pair of lists:
+
+def unzip : List (α × β) → List α × List β
+  | [] => ([], [])
+  | (x, y) :: xys =>
+    (x :: (unzip xys).fst, y :: (unzip xys).snd)
+
+#eval unzip [(1, "a"), (2, "b"), (3, "c")]  -- ([1, 2, 3], ["a", "b", "c"])
+
+-- Unfortunately, this code is slower than it needs to be. Each entry in the list
+-- of pairs leads to two recursive calls, which makes this function take
+-- exponential time.
+
+-- In lean, the result of the recursive call can be named, and thus saved, using
+-- `let`. Local definitions with `let` resemble top-level definitions with `def`
+-- it takes a name to be locally defined, arguments if desired, a type signature
+-- and then a body following `:=`. After the local definition, the expression
+-- in which the local definition is available (called the **body** of the `let`-
+-- expression) must be on a new line.
+
+def localUnzip : List (α × β) → List α × List β
+  | [] => ([], [])
+  | (x, y) :: xys =>
+    let unzipped : List α × List β := localUnzip xys
+    (x :: unzipped.fst, y :: unzipped.snd)
+
+#eval localUnzip [(1, "a"), (2, "b"), (3, "c")] -- ✅
+
+def localPatternUnzip : List (α × β) → List α × List β
+  | [] => ([], [])
+  | (x, y) :: xys =>
+    let (xs, ys) : List α × List β := localPatternUnzip xys
+    (x :: xs, y :: ys)
+
+#eval localPatternUnzip [(1, "a"), (2, "b"), (3, "c")] -- ✅
