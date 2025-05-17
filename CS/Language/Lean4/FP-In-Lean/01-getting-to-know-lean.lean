@@ -499,3 +499,65 @@ inductive MyUnit : Type where
 -- `Unit` type is similar to `void` in languages derived from `C`
 
 -- The `Empty` datatype has no constructors, thus it indicates unreachable code
+
+def MyList.tail? {α : Type} (xs : MyList α) : Option α :=
+  match xs with
+  | MyList.nil => none
+  | MyList.cons x ys =>
+    match ys with
+    | MyList.nil => x
+    | MyList.cons _ _ => tail? ys
+
+#eval useMyList.tail? -- some "c"
+
+def List.findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Option α :=
+  match xs with
+  | [] => none
+  | x :: ys =>
+    match predicate x with
+    | true => x
+    | false => findFirst? ys predicate
+
+def Prod.switch {α β : Type} (pair : α × β) : β × α :=
+  { fst := pair.snd, snd := pair.fst }
+
+#eval { fst := 3, snd := "3" : Nat × String}.switch -- ("3", 3)
+
+def List.myZip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
+  match xs with
+  | [] => []
+  | x :: xsRest =>
+    match ys with
+    | [] => []
+    | y :: ysRest => { fst := x, snd := y : α × β } :: myZip xsRest ysRest
+
+#eval [1, 2, 3].myZip ["a", "b", "c"]
+#eval [1, 2, 3].myZip ["a", "b"]
+
+def take {α : Type} (n : Nat) (seq : List α) : List α :=
+  match n with
+  | 0 => []
+  | _ =>
+    match seq with
+    | [] => []
+    | x :: rest => x :: take (n - 1) rest
+
+#eval take 2 ["a", "b", "c"]  -- ["a", "b"]
+#eval take 2 ["a"]            -- ["a"]
+
+def distributive {α β γ : Type} (a : α × (β ⊕ γ)) : (α × β) ⊕ (α × γ) :=
+  match a.snd with
+  | Sum.inl x => Sum.inl { fst := a.fst, snd := x : α × β }
+  | Sum.inr y => Sum.inr { fst := a.fst, snd := y : α × γ }
+
+def testDistributive : String × (Nat ⊕ Bool) := {
+  fst := "This is a test string",
+  snd := Sum.inr false
+}
+#eval distributive testDistributive   -- Sum.inr ("This is a test string", false)
+#check distributive testDistributive  -- String × Nat ⊕ String × Bool
+
+def multiplication {α : Type} (a : Bool × α) : α ⊕ α :=
+  match a.fst with
+  | true  => Sum.inl a.snd
+  | false => Sum.inr a.snd
