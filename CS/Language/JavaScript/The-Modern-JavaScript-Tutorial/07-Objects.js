@@ -230,9 +230,164 @@ let testConstructor1 = new User("AshGrey");
 //   2. The function body executes. Usually it modifies `this`, adds new properties to it.
 //   3. The value of `this` is returned.
 
-function UserExplained(name) {
-  this = {};    // Implicitly
-  this.name = name;
+// function UserExplained(name) {
+//   this = {};    // Implicitly
+//   this.name = name;
+//   this.isAdmin = false;
+//   return this;  // Implicitly
+// }
+
+// If we have many lines of code all about creation of a single complex object, we can wrap
+// them in an immediately called constructor function
+
+let testImmediateFunction = new function() {
+  this.name = "AshGrey";
   this.isAdmin = false;
-  return this;  // Implicitly
 }
+console.log(testImmediateFunction.name);  // AshGrey
+
+// This constructor can't be called again, because it is not saved anywhere, just created
+// and immediately called. So this trick aims to encapsulate the code that constructs the
+// single object without future reuse.
+
+function testCheckNewFunction() {
+  console.log(new.target);
+}
+testCheckNewFunction();     // undefined
+new testCheckNewFunction(); // [Function: testCheckNewFunction]
+
+// With `new.target`, it can be used inside the function to know whether it was called with
+// new `new`, or "in constructor mode".
+
+function TestAlwaysInConstructor(name) {
+  if (!new.target) {
+    return new TestAlwaysInConstructor(name);
+  }
+  this.name = name;
+}
+let testAlwaysInConstructor = TestAlwaysInConstructor("AshGrey");
+console.log(testAlwaysInConstructor.name);  // AshGrey
+
+// Usually, constructors do not have a `return` statement. Their task iss to write all necessary
+// stuff into `this`, and it automatically becomes the result. But if there is a `return`:
+//   1. If `return` is called with an object, then the object is returned instead of `this`;
+//   2. If `return` is called with a primitive, it's ignored.
+
+function TestReturnNewObjects() {
+  this.name = "AshGrey";
+  return {
+    name: "Huaier",
+    lover: "AshGrey"
+  }
+}
+console.log(new TestReturnNewObjects().lover);  // AshGrey
+
+function TestReturnPrimitives() {
+  this.name = "Huaier";
+  return 3;
+}
+console.log(TestReturnPrimitives());          // 3      -> In regular mode
+console.log(new TestReturnPrimitives().name); // Huaier -> In constructor mode
+
+// Optional chaining
+
+let testNoProperty = {};
+// console.log(testNoProperty.address.street); // uncomment here, there is problem
+// `testNoProperty.address` is `undefined`, so an attempt to get its property `street`
+// will cause an error.
+
+// The optional chaining `?.` stops the evaluation if the value before `?.` is undefined
+// or `null` and returns `undefined`.
+
+console.log(testNoProperty?.address?.street); // undefined
+
+// The optional chaining `?.` is not an operator, but a special syntax construct, that
+// also works with functions and square brackets.
+
+// - `?.()` is used to call a function that may not exist.
+// - `?.[]` is used to get a property or element from an object / array that may not exist.
+
+// Symbol
+
+let id1 = Symbol("id");
+let id2 = Symbol("id");
+console.log(id1 === id2); // false
+
+// Symbol don't auto-convert to a string. If we use `alert` to show the Symbol in browser
+// it will show a TypeError.
+console.log(id1.toString());  // Symbol(id)
+console.log(id2.description); // id
+
+// Symbols allow us to create "hidden" properties of an object, that no other part of code
+// can accidentally access or overwrite.
+
+let testThirdPartyObject = {
+  name: "This is a third party variable",
+  age: 20
+};
+testThirdPartyObject[id1] = 1;
+console.log(testThirdPartyObject[id1]); // 1
+
+let lover = Symbol("lover");
+let testUseSymbolInside = {
+  name: "AshGrey",
+  age: 21,
+  [lover]: "Huaier"
+};
+
+for (key in testUseSymbolInside) {
+  console.log("Property of `testUseSymbolInside`: ", key);  // Only name, age
+}
+console.log(Object.keys(testUseSymbolInside));  // ['name', 'age']
+
+// "for...in" loop and `Object.keys()` ignore the symbol property, that's a part of the
+// general "hiding symbolic properties". But `Object.assign()` copies both string and
+// symbol properties.
+
+console.log(Object.assign({}, testUseSymbolInside)[lover]); // Huaier
+
+// If we want same-named symbols to be same entities, for instance, different parts of
+// our application want to access symbol "id" meaning exactly the same property.
+
+// To achieve this, there exists a *global symbol registry*. We can create symbols in it
+// and access them later, and it guarantees that repeated accesses by the same name return
+// exactly the same symbol.
+
+let createIdSymbol = Symbol.for("id");
+let getIdSymbol = Symbol.for("id");
+console.log(createIdSymbol === getIdSymbol);  // true
+console.log(Symbol.keyFor(getIdSymbol));  // id
+
+// Object to primitive conversion
+
+// 1. "string": For an object-to-string conversion, when we are doing an operation on an
+//    object that expects a string like `alert` function or as a property key
+
+let testConvertToString = {
+  str1: "str1",
+  str2: "str2"
+};
+let testConvertToStringResult = {
+  "[object Object]": "Yes convert to [object Object]",
+};
+console.log(testConvertToStringResult[testConvertToString]);
+
+// 2. "number": For an object-to-number conversion
+
+let testConvertToNumber = {
+  num1: 2,
+  num2: 0
+};
+console.log(+testConvertToNumber);  // NaN
+
+// 3. "default": Binary plus can work both with strings (concatenates them) and number
+//   (adds them). So if a binary plus gets an object as an argument, it uses the "default"
+//   hint to convert it. The greater and less comparison operators such as < >, can work
+//   with both strings and numbers too. Still, they use the "number" hint, not "default".
+//   That's for historical reasons.
+
+// All built-in objects except for one case (`Date` object) implement "default" conversion
+// the same way as "number".
+
+// To do the conversion, JavaScript tries to find and call three object methods
+//   1. Call `obj[Symbol.toPrimitive](hint)

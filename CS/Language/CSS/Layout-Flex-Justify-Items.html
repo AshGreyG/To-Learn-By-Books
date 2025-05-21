@@ -1,0 +1,76 @@
+<html>
+<head>
+  <title>Layout-Flex-Justify-Items</title>
+  <style>
+    .element {
+      background-color: lightskyblue;
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: max-content;
+    }
+
+    div[class^="justify-items-"] {
+      margin: 20px 0;
+      background-color: lightgoldenrodyellow;
+      display: flex;
+      flex-direction: row;
+      height: 200px;
+    }
+
+    .justify-items-start   { justify-items: flex-start; }
+    .justify-items-end     { justify-items: flex-end; }
+    .justify-items-center  { justify-items: center; }
+    .justify-items-stretch {
+      justify-items: stretch;
+      > .element {
+        height: auto;
+      }
+    }
+    .justify-items-baseline {
+      justify-items: baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .justify-items-first-baseline {
+      justify-items: first baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .justify-items-last-baseline {
+      justify-items: last baseline;
+      > .element {
+        height: auto;
+      }
+    }
+    .justify-items-self-start { justify-items: self-start; }
+    .justify-items-self-end   { justify-items: self-end; }
+  </style>
+</head>
+
+<body>
+  <script>
+    var body = document.body;
+    var tailwindCSSProperties = [
+      "start", "end", "center",
+      "stretch", "normal", "baseline",
+      "first-baseline", "last-baseline",
+      "self-start", "self-end"
+    ];
+    tailwindCSSProperties.forEach((prop) => {
+      body.innerHTML += `
+        <div class=\"justify-items-${prop}\">
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+          <div class=\"element\">${prop}</div>
+        </div>
+      `
+    });
+  </script>
+</body>
+</html>

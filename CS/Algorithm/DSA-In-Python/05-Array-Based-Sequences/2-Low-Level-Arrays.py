@@ -124,10 +124,14 @@ class DynamicArray :
         self._capacity : int = 1
         self._A = self._make_array(self._capacity)
 
-    def __len__(self) :
+    def __len__(self) -> int :
         """ Return number of elements stored in the array. """
         return self._n
 
+    def __getitem__(self, k : int) :
+        """ Return element at index k """
+
     def _make_array(self, c : int) :
         """ Return new array with capacity c. """
-        return (c * ctypes.py_object)()
+        return c * ctypes.py_object()
+

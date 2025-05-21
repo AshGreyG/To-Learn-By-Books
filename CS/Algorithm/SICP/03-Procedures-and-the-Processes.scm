@@ -1,5 +1,5 @@
 ; There are many ways to compute factorials:
-;       $ n! = n \times (n-1)! $
+;       $ n! = n × (n-1)! $
 ; This is a linear recursive process
 
 (define (factorial n)
@@ -428,7 +428,7 @@
 ; Totally 5 times
 
 ; b
-; $ \Theta(a)=log_3(a) $
+; $ Θ(a)=log_3(a) $
 
 ; -----------------------------------------------
 
@@ -446,8 +446,8 @@
       1
       (* b (exponent b (- n 1)))))
 
-; This is a linear recursive process, which requires $\Omega(n)$ steps and
-; $\Omega(n)$ space. We can readily formulate an equivalent linear iteration:
+; This is a linear recursive process, which requires $Ω(n)$ steps and
+; $Ω(n)$ space. We can readily formulate an equivalent linear iteration:
 
 (define (exponent b n)
   (define (exponent-iter b counter product)
@@ -458,7 +458,7 @@
                        (* b product))))
   (exponent-iter b n 1))
 
-; This version requires $\Omega(n)$ steps and $\Omega(1)$ space.
+; This version requires $Ω(n)$ steps and $Ω(1)$ space.
 
 ; We can also take advantage of successive squaring in computing exponential
 ; in general if we use the rule:
@@ -481,7 +481,7 @@
 (define (odd?  n) (= (remainder n 2) 1))
 
 ; The process evolved by 'fast-exponent' grows logarithmically with $n$
-; in both space and number of steps. The process has $\Omega{\log n}$
+; in both space and number of steps. The process has $Ω{\log n}$
 ; growth.
 
 ; ---------------- Exercise 1.16 ----------------
@@ -593,3 +593,5 @@
                           q
                           (- count 1)))))
   (fib-iter 1 0 0 1 n))
+
+; -----------------------------------------------

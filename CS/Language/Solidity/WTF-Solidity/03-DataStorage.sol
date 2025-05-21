@@ -94,7 +94,7 @@ contract DataStorage {
     }
     function testEtherUnit() external pure returns(uint) {
         assert(1 ether == 1e18);
-        assert(1 ether == 100000000000000000);
+        assert(1 ether == 1000000000000000000);
         return 1 ether;
     }
 

@@ -11,8 +11,8 @@ type Res1 = GetValueFromPromise<TestPromiseType>;  // Res1: number[] | string
 
 type Pop<T extends unknown[]>
   = T extends [...infer Rest, infer R]
-  ? [...Rest]
-  : never;
+    ? [...Rest]
+    : never;
 
 type TestPopType = [1, 3, 4, "12", 3];
 
@@ -22,8 +22,8 @@ type Res2 = Pop<TestPopType>; // Res2: [1, 3, 4, "12"]
 
 type Shift<T extends unknown[]>
   = T extends [infer R, ...infer Rest]
-  ? Rest
-  : never;
+    ? Rest
+    : never;
 
 type TestShiftType = [true, false, "12", 3, 4, 5];
 
@@ -33,8 +33,8 @@ type Res3 = Shift<TestShiftType>; // Res3: [false, "12", 3, 4, 5]
 
 type TrimLeft<S extends string>
   = S extends `${" " | "\n" | "\t"}${infer Rest}`
-  ? TrimLeft<Rest>
-  : S;
+    ? TrimLeft<Rest>
+    : S;
 
 type TestTrimLeftType = "    \n\t   \n  1234";
 
@@ -44,8 +44,8 @@ type Res4 = TrimLeft<TestTrimLeftType>; // Res4: "1234"
 
 type TrimRight<S extends string>
   = S extends `${infer Rest}${" " | "\n" | "\t"}`
-  ? TrimRight<Rest>
-  : S;
+    ? TrimRight<Rest>
+    : S;
 
 type TestTrimRightType = "12ui    \n\t\n   ";
 
@@ -66,8 +66,8 @@ type Replace<
   O extends string,
   R extends string
 > = S extends `${infer Left}${O}${infer Right}`
-  ? `${Left}${R}${Replace<Right, O, R>}`
-  : S;
+    ? `${Left}${R}${Replace<Right, O, R>}`
+    : S;
 
 type TestReplaceType = "This is is is sentence has many is";
 
@@ -78,8 +78,8 @@ type Res7 = Replace<TestReplaceType, "is", "no">;
 
 type GetParamsType<F extends Function>
   = F extends (...params: infer Params) => any
-  ? Params
-  : never;
+    ? Params
+    : never;
 
 type TestGetParamsType = (a: number, b: string[]) => boolean;
 
@@ -89,8 +89,8 @@ type Res8 = GetParamsType<TestGetParamsType>; // Res8: [a: number, b: string[]]
 
 type GetReturnType<F extends Function>
   = F extends (...params: any) => infer Return
-  ? Return
-  : never;
+    ? Return
+    : never;
 
 type TestGetReturnType = (a: number) => [string, boolean];
 

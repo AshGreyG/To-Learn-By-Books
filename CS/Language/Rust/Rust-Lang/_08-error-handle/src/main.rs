@@ -125,3 +125,10 @@ fn last_char_of_first_line(text: &str) -> Option<char> {
     // `next()` return type is `Option<str>`, use ? to use methods for `Some` or return
     // `None` early.
 }
+
+// When a `main` function returns a `Result<(), E>`, the executable will exit with a
+// value of `0` if `main` returns `Ok(())` and will exit with a nonzero value if 
+// `main` returns an `Err` value.
+
+// The `main` function may return any types that implement `std::process::Termination`
+// trait, which contains a function `report` that returns an `ExitCode`

@@ -350,3 +350,7 @@ const person2 = makeWatchedObject2(rawPerson);
 person2.on("ageChanged", (newAge) => {
   console.log(`New age has been changed to ${newAge}`); // newAge is number
 });
+
+interface TestFilterType {
+  
+}
