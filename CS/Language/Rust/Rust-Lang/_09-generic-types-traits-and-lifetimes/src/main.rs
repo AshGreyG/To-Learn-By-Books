@@ -21,6 +21,14 @@ fn main() {
     println!("{}", news.summarize());
     println!("{}", news.summarize_author());
     notify(&news);
+
+    println!("{}", longest(&"This", &"AshGrey"));   // AshGrey
+
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split(".").next().unwrap();
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
 }
 
 // When defining a functions that uses generics, we place the generics in the
@@ -211,4 +219,136 @@ impl<T: Display> Summary for T {
     fn summarize_author(&self) -> String {
         format!("@{}", self)
     }
+}
+
+// Every reference in Rust has a **lifetime**, which is the scope for which that
+// reference is valid. Most of the time, lifetimes are implicit and inferred,
+// just like most of the time, types are inferred
+
+// The Rust compiler has a borrow checker that compares scopes to determine whether
+// all borrows are valid
+
+// fn lifetime_checker() {
+//     let r;                       // ----------+----- 'a
+//     {                            //           |
+//         let x = 5;               // -+-- 'b   |
+//         r = &x;                  //  |        |
+//         // x doesn't live enough // -+        |
+//     }                            //           |
+//     println!("r: {}", r);        // ----------+
+// }
+
+// The inner 'b lifetime is much smaller than the outer 'a lifetime block. At compile
+// time, Rust compares the size of the two lifetimes and sees that 'r' has a lifetime
+// of 'a but that it refers to memory with lifetime 'b. The program is rejected because
+// 'b is shorter than 'a
+
+// fn error_longest(x: &str, y: &str) -> &str { // error here
+//     if x.len() > y.len() { x } else { y }
+// }
+// this function's return type contains a borrowed value, but the signature does not 
+// say whether it is borrowed from `x` or `y`
+
+// When we're defining this function, we don't know the concrete values that will be
+// passed into this function, so we don't know whether the if case or the else case
+// will execute. We also don't know the concrete lifetimes of the references that
+// will be passed in
+
+// Lifetime annotations don't change how long any of the references live. Rather,
+// they describe the relationships of the lifetimes of multiple references to
+// each other without affecting the lifetimes.
+
+// &i32         => a reference
+// &'a i32      => a reference with an explicit lifetime
+// &'a mut i32  => a mutable reference with an explicit lifetime
+
+// To use lifetime annotations in function signatures, we need to declare the **generic
+// lifetime parameters** inside angle brackets between the function name and the parameter
+// list
+
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+// The returned reference will be valid as long as both the parameters are valid
+
+// We can define structs to hold references, but in that case we would need to add
+// a lifetime annotation on every reference in the struct's definition
+
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
+
+// For `scalable_first_word` function in [../../_03-understanding-ownership/src/main.rs]
+// The signature is
+//
+//    `fn scalable_first_word(s: &str) -> &str`
+//
+// The reason why this function doesn't need an explicit lifetime annotation is historical
+// The rule is called **lifetime elision**
+
+// 0. Lifetimes on function or method parameters are called **input lifetimes**, and 
+//    lifetimes on return values are called **output lifetimes**
+
+// 1. The compiler assigns a lifetime parameter to each parameter that's a reference
+//    In other words, a function with one parameter gets one lifetime parameter:
+//
+//      `fn foo<'a>(x: &'a i32)`
+//
+//    a function with two parameters gets two separate lifetime parameters
+//
+//      `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`
+//
+//   and so on.
+
+// 2. If there is exactly one input lifetime parameter, that lifetime is assigned to
+//    all output lifetime parameters:
+//
+//     `fn foo<'a>(x: &'a i32) -> &'a i32`
+
+// 3. If there are multiple input lifetime parameters, but one of them is `&self`
+//    or `&mut self` because this is a method, the lifetime of `self` is assigned
+//    to all output lifetime parameters
+
+//     ==> fn first_word(s: &str) -> &str
+// (1) ==> fn first_word<'a>(s: &'a str) -> &str
+// (2) ==> fn first_word<'a>(s: &'a str) -> &'a str
+
+// Lifetime names for struct fields always need to be declared after the `impl`
+// keyword and then used after the struct's name. In method signatures inside
+// the `impl` block, references might be tied to the lifetime of references
+// in the struct's fields, or they might be independent
+
+impl<'a> ImportantExcerpt<'a> {
+    fn announce_and_return_part(&self, announcement: &str) -> &str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+    fn explicit_announce<'b, 'c>(&'b self, announcement: &'c str) -> &'b str {
+        println!("Explicit attention please: {}", announcement);
+        self.part
+    }
+}
+
+//     ==> fn announce_and_return_part(&self, announcement: &str) -> &str
+// (1) ==> fn announce_and_return_part<'b, 'c>(&'b self, announcement: &'c str) -> &str
+// (3) ==> fn announce_and_return_part<'b, 'c>(&'b self, announcement: &'c str) -> &'b str
+
+// `'static` denotes that the affected reference can live for the entire duration of
+// the program. All string literals have the `'static` lifetime
+
+fn static_lifetime() {
+    let s: &'static str = "I have a static lifetime.";
+}
+
+fn longest_with_announcement<'a, T>(
+    x: &'a str,
+    y: &'a str,
+    ann: T,
+) -> &'a str
+where
+    T: Display
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() { x } else { y }
 }
