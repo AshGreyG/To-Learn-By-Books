@@ -10,4 +10,5 @@ fn calculate_square() {
 }
 
 // The code above is integration test, we don't need to annotate any
-// code in `tests/integration_test.rs` with `#[cfg(test)]`
+// code in `tests/integration_test.rs` with `#[cfg(test)]`. Cargo treats the
+// tests directory specially and compiles files in this directory
