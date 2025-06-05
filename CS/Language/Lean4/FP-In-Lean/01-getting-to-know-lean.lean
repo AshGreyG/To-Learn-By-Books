@@ -639,3 +639,136 @@ def localPatternUnzip : List (α × β) → List α × List β
     (x :: xs, y :: ys)
 
 #eval localPatternUnzip [(1, "a"), (2, "b"), (3, "c")] -- ✅
+
+-- The biggest difference between `let` and `def` is that recursive `let` definitions
+-- must be explicitly indicated by writing `let rec`. For instance, one way to
+-- reverse a list involves a recursive helper function:
+
+def reverse (xs : List α) : List α :=
+  let rec helper : List α → List α → List α
+    | [], record => record
+    | y :: ys, record => helper ys (y :: record)
+  helper xs []
+
+#eval reverse [1, 2, 3, 4]  -- [4, 3, 2, 1]
+
+-- Pattern matching expressions, just like pattern-matching definitions, can
+-- match on multiple values at once. Both the expressions to be inspected and
+-- the patterns that they match against are written with commas between them
+
+def drop (n : Nat) (xs : List α) : List α :=
+  match n, xs with
+  | Nat.zero, ys => ys
+  | _, [] => []
+  | Nat.succ n, _ :: ys => drop n ys
+
+#eval drop 3 [1, 2, 3, 0, 9, 1] -- [0, 9, 1]
+
+-- Just like list patterns have special syntax, natural numbers can be matched
+-- using literal numbers and `+`.
+
+def evenPattern : Nat → Bool
+  | 0 => true
+  | n + 1 => not (evenPattern n)
+
+def halvePattern : Nat → Nat
+  | 0 => 0
+  | 1 => 0
+  | n + 2 => (halvePattern n) + 1
+
+-- When using this syntax, the second argument to `+` should always be a literal
+-- `Nat`. Even though addition is commutative, flipping the arguments in a pattern
+-- can result in errors like the following:
+
+-- def halveProblem : Nat → Nat
+--   | 0 => 0
+--   | 1 => 0
+--   | 2 + n => (halveProblem n) + 1
+
+-- invalid patterns, `n` is an explicit pattern variable, but it only occurs
+-- in positions that are inaccessible to pattern matching `.(Nat.add 2 n)`
+
+-- This restriction enables Lean to transform all uses of the `+` notation
+-- in a pattern into uses of the underlying `Nat.succ`, keeping the language
+-- simpler behind the scenes.
+
+-- Anonymous functions
+
+-- Function in Lean need not be defined at the top level, as expressions,
+-- functions are produced with the `fun` syntax. Function expressions begin
+-- with the keyword `fun`, followed by one or more parameters, which are
+-- separated from the return expression using `=>`
+
+#check fun x => x + 1 -- fun x => x + 1 : Nat → Nat
+
+-- Type annotations are written the same way as on `def`, using `()` and colons
+
+#check fun (x : Int) => x + 1 -- fun x => x + 1 : Int → Int
+
+-- Similarly, implicit parameters may be written with curly braces:
+
+#check fun {α : Type} (x : α) => x  -- fun {α} x => x : {α : Type} → α → α
+
+-- This style of anonymous function expressions is often referred to as a
+-- **lambda expression**, because the typical notation used in mathematical
+-- descriptions of programming languages uses the λ where Lean has the
+-- keyword `fun`
+
+#check λ (x : Nat) => x - 1 -- fun x => x - 1 : Nat → Nat -- ✅
+
+-- Anonymous functions also support the multiple-pattern style used in `def`
+
+#check fun
+  | 0 => none
+  | n + 1 => some n
+-- fun x =>
+--   match x with
+--     | 0 => none
+--     | n.succ => some n : Nat → Option Nat
+
+-- Note that Lean's own description of the function has a named argument and
+-- a **match** expression.
+
+-- Definitions using `def` that take arguments may be rewritten as function
+-- expressions. For instance, a function that doubles its argument can be
+-- rewritten as follows:
+
+def rewriteDouble : Nat → Nat := fun
+  | 0 => 0
+  | k + 1 => rewriteDouble k + 2
+
+-- When an anonymous function is very simple, like `fun x => x + 1`, the
+-- syntax for creating the function can be fairly verbose. In an expression
+-- surrounded by parentheses, a centered dot character ⬝ can stand for
+-- an parameter, and the expression inside the parentheses becomes the
+-- function's body.
+
+#check (· + 1)  -- use \. (\centerdot) rather than \cdot -- fun x => x + 1 : Nat → Nat
+#check ((· * 2), 3) -- (fun x => x * 2, 3) : (Nat → Nat) × Nat
+
+-- Each name in Lean occurs in a **namespace**, which is a collection of names.
+-- Names are placed in namespaces using `.`, so `List.map` is the name `map`
+-- in the `List` namespace
+
+namespace NewMyNamespace
+
+def triple (x : Nat) : Nat := 3 * x
+def double (x : Nat) : Nat := 2 * x
+
+end NewMyNamespace
+
+#eval NewMyNamespace.triple 3 -- 9
+
+-- Namespace may be opened, which allows the names in them to be used without
+-- explicit qualification. Writing `open NewMyNamespace in` before an expression
+-- causes the contents of `NewMyNamespace` to be available in the expression.
+
+def sixTimes (x : Nat) : Nat :=
+  open NewMyNamespace in
+  double (triple x)
+
+-- Namespaces can also be opened prior to a command. This allows all parts of
+-- the command to refer to the contents of the namespace.
+
+open NewMyNamespace in
+#check triple -- NewMyNamespace.triple (x : Nat) : Nat
