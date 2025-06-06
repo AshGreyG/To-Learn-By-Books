@@ -772,3 +772,55 @@ def sixTimes (x : Nat) : Nat :=
 
 open NewMyNamespace in
 #check triple -- NewMyNamespace.triple (x : Nat) : Nat
+
+-- When consuming values that have a sum type, it is often the case that only a
+-- single constructor is of interest.
+
+namespace Markdown
+
+inductive InlineElement : Type where
+  | lineBreak
+  | string : String → InlineElement
+  | emph : InlineElement → InlineElement
+  | strong : InlineElement → InlineElement
+
+def InlineElement.string? (ele : InlineElement) : Option String :=
+  match ele with
+  | InlineElement.string s => some s
+  | _ => none
+
+def ele_1 : InlineElement := InlineElement.string "2"
+def ele_2 : InlineElement := InlineElement.emph ele_1
+
+#eval InlineElement.string? ele_1 -- some "2"
+#eval InlineElement.string? ele_2 -- none
+
+-- An alternative way of writing this function's body uses `if` together
+-- with `let`:
+
+def InlineElement.stringIfLet? (ele : InlineElement) : Option String :=
+  if let InlineElement.string s := ele then
+    some s
+  else
+    none
+
+-- It's very similar to Rust's syntax.
+
+end Markdown
+
+-- In some contexts, it can be convenient to pass arguments positionally,
+-- rather than by name, but without naming the constructor directly. Defining
+-- a variety of similar structure types can help keep domain concepts separate
+-- The arguments can be enclosed in angle brackets `⟨` and `⟩`
+
+-- This positional syntax can only be used in a context where Lean can
+-- determine the structure's type, either from a type annotation or from other
+-- type information.
+
+#eval (⟨1, 2⟩ : Point)  -- { x := 1.000000, y := 2.000000 }
+
+-- In Lean, prefixing a string with `s!` triggers **interpolation**, where
+-- expressions contained in curly braces inside the string are replaced with
+-- their values.
+
+#eval s!"six times is {NewMyNamespace.double 3}"  -- "six times is 6"
