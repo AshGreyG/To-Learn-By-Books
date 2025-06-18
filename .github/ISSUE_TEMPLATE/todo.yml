@@ -1,0 +1,17 @@
+name: 🔖 Add today todos
+description: Create a todo list for today
+labels: [todo]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🔖 Here is the todo list for today
+  
+  - type: textarea
+    id: todo-list-description
+    attributes:
+      label: 📝 Write down today's todo list
+      description: A clear list of today's todos, including books and projects.
+      placeholder: Today's todo list
+    validations:
+      required: true
