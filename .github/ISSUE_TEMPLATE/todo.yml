@@ -8,10 +8,33 @@ body:
         🔖 Here is the todo list for today
   
   - type: textarea
-    id: todo-list-description
+    id: business-code-description
     attributes:
-      label: 📝 Write down today's todo list
-      description: A clear list of today's todos, including books and projects.
-      placeholder: Today's todo list
+      label: 🧑‍💻 Business Code Todo
+      description: The business code is what you write for your company, and that's boring!!!
+      placeholder: |
+        - Today's todo for business code...
+    validations:
+      required: false
+
+  - type: textarea
+    id: learning-description
+    attributes:
+      label: 📚 Learning Code Todo
+      description: The learning code is what you write for your own interest, and that's wonderful!!!
+      placeholder: |
+        - Today's todo for learning code...
     validations:
       required: true
+
+# !!! YOU SHOULD LEARN NEW THINGS EVERYDAY !!!
+
+  - type: textarea
+    id: self-project-description
+    attributes:
+      label: 🚀 Project Code Todo
+      description: The project code is for contributing open-source projects.
+      placeholder: |
+        - Today's todo for project code...
+    validations:
+      required: false
