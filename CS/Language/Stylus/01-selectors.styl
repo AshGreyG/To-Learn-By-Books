@@ -1,0 +1,171 @@
+body
+  color white
+
+// Stylus is indention-based and whitespace is significant. And if we prefer
+// we can also use colon to separate property and value.
+
+body[title*="as"]
+  color: white
+
+textarea, input
+  border: 1px solid #eee
+
+// Stylus allows you to define properties for several selectors at once through
+// comma separation. If you want to, you can also use newline:
+
+textarea
+input
+  border-radius: 1px
+
+// The only exception to this rule are selectors that look like properties:
+
+textarea.as
+  foo bar baz, // If there is no comma, this will be compiled to `foo: bar baz`
+  > input
+    border: 1px solid
+
+// The `&` character references the parent selectors:
+
+textarea.pure
+  &:hover
+    background-color: #1e1e2e
+
+    // It compiles to `textarea.pure:hover`
+
+box-shadow()
+  -webkit-box-shadow arguments
+  -moz-box-shadow arguments
+  box-shadow arguments
+
+  html.ie8 &,
+  html.ie7 &,
+  html.ie6 &
+    border: 2px solid arguments[length(arguments) - 1]
+
+body
+  #login
+    box-shadow(1px 1px 3px #eee)
+
+// `^[N]` anywhere in a selector, where `N` can be a number, represents a
+// partial reference. Partial reference works similar to the parent reference,
+// but while parent reference contains the whole selector, partial selectors
+// contain only the first merged `N` levels of the nested selectors.
+
+.foo
+  &__bar
+    width: 10px
+
+    ^[0]:hover &  // ^[0] => .foo and & => .foo__bar, so it's compiled to 
+                  // .foo:hover .foo__bar
+      width: 20px
+
+// Negative values are counting from the end, so `^[-1]` would give you
+// the last selector from the chain before `&`:
+
+.foo  // 0 -2
+  &__bar  // 1 -1
+    &_baz // 2
+      width: 10px
+
+      ^[-1]:hover & // It's compiled to .foo__bar:hover .foo__bar_baz
+        width: 20px
+
+// `^[N..M]` anywhere in a selector, where both `N` and `M` can be numbers
+
+.foo  // 0 // -1
+  & .bar // 1
+    width: 10px
+
+    ^[0]:hover ^[1..-1] // Equals to ^[-1..1], it's `.bar`
+      width: 20px
+
+// When both numbers are equal, the result would be just one raw level of
+// a selector
+
+// The `~/` characters at the start of a selector can be used to point at
+// the selector at the first nesting and could be considered as a shortcut
+// to `^[0]`. The only drawback is that you can use initial reference only
+// at the start of a selector
+
+.block
+  &__element
+    ~/:hover &
+      color: red
+
+    .at ~/  // It's compiled to .block__element .at ~/
+      color: blue
+
+// The `../` characters at the start of a selector mark a relative reference,
+// which points to the previous to the `&` compiled selector. You can nest
+// negative reference `../../` to get deeper levels, but note that it can be
+// only used at the start of the selector
+
+.foo
+  .bar
+    width: 10px
+
+    &,
+    ../ .baz  // It's compiled to `.foo .bar`
+      height: 10px
+
+// The `/` character at the start of a selector is a root reference. It references
+// the root context and this means the selector won't prepend the parent's
+// selector to it
+
+textarea
+input
+  color: #a7a7a7
+  &:hover
+    /.is-hovered  // It's compiled to .is-hovered
+      color: #000
+
+// You can use the built-in `selector()` to get the current compiled selector. Could
+// be used inside mixins for checks or other clever things.
+
+.foo
+  selector()  // => `.foo`
+
+  &:hover
+    selector()  // => `.foo:hover`
+
+// This function could also accept an optional string argument, in this case it would
+// return the compiled selector. Note that it wouldn't prepend the selector of the
+// current scope in case it don't have any `&` symbols.
+
+// If you want to use returned value of `selector` function as selectors, you need
+// to use `{}` to wrap it:
+
+.foo
+  selector(".bar")  // => .bar
+
+.foo
+  {selector("&:hover")} // => .foo:hover
+    color: red
+
+// `selector` function can accept multiple values or a comma-separated list in
+// order to create a nested selector structure easier.
+
+{selector(".a", ".b", ".c, .d")}
+  color: red
+
+// It will be compiled to
+//
+// .a
+//   .b
+//     .c,
+//     .d
+//       color: red
+
+// `selectors` function returns a comma-separated list of nested selectors for
+// the current level:
+
+.a
+  .b
+    &__c
+      content: selectors()  // => 'a', '& .b', '&__c'
+
+pad(n)
+  margin (- n)
+
+body
+  pad(5px)  // margin: -5px
