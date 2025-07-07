@@ -1,0 +1,80 @@
+// Optional arguments may default to a given expression, with stylus
+// we may even default arguments to earlier arguments
+
+test-optional-arguments(a, b = a)
+  return a + b
+
+test-named-arguments(a, b)
+  return (unit(a, px) unit(b, px))
+
+compare(a, b)
+  if a > b
+    return higher
+  else if a < b
+    return lower
+  else 
+    return equal
+
+test-variable-functions(a, b, fn)
+  return fn(a, b)
+
+.foo
+  content-optional-arguments-1: test-optional-arguments(1, 2)   // 3
+  content-optional-arguments-2: test-optional-arguments(10)     // 20
+
+  content-named-arguments-1: test-named-arguments(a: 1, b: 20)  // 1px 20px
+  content-named-arguments-2: test-named-arguments(b: 1, a: 20)  // 20px 1px
+
+  content-condition-1: compare(1, 2)  // lower
+  content-condition-2: compare(1, 1)  // equal
+  content-condition-3: compare(2, 1)  // higher
+
+  test-alias = compare
+
+  content-alias: test-alias(1, 2) // lower
+
+  content-variable-functions-1: test-variable-functions(
+    a: 1,
+    b: 2,
+    fn: test-named-arguments
+  ) // 1px 2px
+  content-variable-functions-2: test-variable-functions(
+    a: 20,
+    b: 10,
+    fn: test-optional-arguments
+  ) // 30
+
+// You can use anonymous functions where needed using `@{}` syntax:
+
+bubble-sort(list, fn = null)
+  // Default sort function
+  if fn == null
+    fn = @(a, b) {
+      return a > b
+    }
+
+  for $i in 1...length(list)
+    for $j in 0...$i
+      if fn(list[$j], list[$i])
+        $temp = list[$i]
+        list[$i] = list[$j]
+        list[$j] = $temp
+
+  return list
+
+.foo
+  content-anonymous-functions-1: bubble-sort(10 4 2 1 8 7 3 5)
+  // 1 2 3 4 5 7 8 10
+  content-anonymous-functions-2: bubble-sort(
+    1 5 3 6 7 1 2 3 4 10,
+    @(a, b) { return a < b }
+  )
+  // 10 7 6 5 4 3 3 2 1 1
+
+test-arguments()
+  n = 0
+  for num in arguments
+    n += num
+
+.foo
+  content-arguments: test-arguments(1, 2, 3, 4, 5)  // 15
