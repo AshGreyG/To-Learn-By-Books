@@ -133,6 +133,7 @@ fn test_for_function() {
     let _s1 = gives_ownership();
 
     // 'gives_ownership' moves its return value into '_s1'
+    println!("{}", _s1);
 
     let s2 = String::from("Hello");
     let _s3 = takes_and_gives_back(s2);

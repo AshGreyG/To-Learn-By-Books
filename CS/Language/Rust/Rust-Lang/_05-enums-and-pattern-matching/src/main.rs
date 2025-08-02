@@ -16,7 +16,7 @@ enum IpAddressKindData {
 
 enum Message {
     Quit,
-    Move{ x: i32, y: i32 },     // Not ({ x: i32, y: i32 })
+    Move { x: i32, y: i32 }, // Not ({ x: i32, y: i32 })
     Write(String),
     ChangeColor(u32, u32, u32),
 }
@@ -24,13 +24,13 @@ enum Message {
 fn main() {
     // We can create instances of each of the two variants of `IpAddressKind` like
     let four = IpAddressKind::V4;
-    let six  = IpAddressKind::V6;
-    route(four);    // It is IPv4
-    route(six);     // It is IPv6
+    let six = IpAddressKind::V6;
+    route(four); // It is IPv4
+    route(six); // It is IPv6
 
     let four_str = IpAddressKindData::V4(String::from("127.0.0.1"));
-    let six_str  = IpAddressKindData::V6(String::from("2001:0db8:85a3:0000:0000:8a2e:0370:7334"));
-    let message  = Message::Write(String::from("Write some code into it."));
+    let six_str = IpAddressKindData::V6(String::from("2001:0db8:85a3:0000:0000:8a2e:0370:7334"));
+    let message = Message::Write(String::from("Write some code into it."));
     route_data(four_str, &message);
     route_data(six_str, &message);
 
@@ -40,17 +40,17 @@ fn main() {
     // We automatically get this constructor function defined as a result of defining
     // the enum.
 
-    let some_number = Some(5);  // some_number: Option<i32>
-    let some_char = Some('e');  // some_char: Option<char>
+    let some_number = Some(5); // some_number: Option<i32>
+    let some_char = Some('e'); // some_char: Option<char>
     let absent_number: Option<i32> = None;
 
-    println!("{:?}", plus_one(some_number));    // Some(6)
-    println!("{:?}", plus_one(absent_number));  // None
+    println!("{:?}", plus_one(some_number)); // Some(6)
+    println!("{:?}", plus_one(absent_number)); // None
 
     test_if_let_syntax();
 
     let alabama = UsState::Alabama;
-    println!("Alabama is in 1890? {}", alabama.existed_in(1890));   // true
+    println!("Alabama is in 1890? {}", alabama.existed_in(1890)); // true
 }
 
 fn route(ip_kind: IpAddressKind) {
@@ -123,7 +123,46 @@ impl UsState {
     fn existed_in(&self, year: u16) -> bool {
         match self {
             UsState::Alabama => year >= 1819,
-            UsState::Alaska  => year >= 1959,
+            UsState::Alaska => year >= 1959,
         }
+    }
+}
+
+// Pattern match can use `|` to match multiple values, use `..=` to match ranges.
+// `_` is used for exhaustiveness checking. If you want to use a variable to store
+// the matched value, you can use `@`
+
+fn match_symbol() {
+    let day = 6;
+    match day {
+        weekend @ (0 | 6) => {
+            // Here needs a pair of parentheses, if we use `weekend @ 0 | 6`, rust
+            // will think you use `weekend` to match specific value `0`, so Rust will
+            // throw an error E0408
+
+            println!(
+                "This is weekend! Today is {}",
+                if weekend == 0 { "Sunday" } else { "Saturday" }
+            )
+        }
+        weekday @ 1..=5 => println!("This is weekday! Values is {}", weekday),
+        _ => println!("Invalid"),
+    }
+}
+
+// We could use `ref` keyword to get a reference:
+
+fn match_reference() {
+    let x: i32 = 5;
+    let mut y: i32 = 6;
+
+    match x {
+        ref r => println!("Got a reference to {}", r),
+        // The type of `r` here is &i32
+    }
+
+    match y {
+        ref mut mr => println!("Got a mutable reference to {}", mr),
+        // The type of `mr` here is &i32 and it's mutable.
     }
 }
