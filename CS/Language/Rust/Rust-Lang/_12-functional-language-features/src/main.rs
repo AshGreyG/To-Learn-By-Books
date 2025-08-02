@@ -1,6 +1,8 @@
 // Rust's closure are anonymous functions you can save in a variable or
 // pass as arguments to other functions.
 
+use std::{thread, time::Duration};
+
 #[derive(Debug, PartialEq, Copy, Clone)]
 enum ShirtColor {
     Red,
@@ -40,6 +42,87 @@ impl Inventory {
     }
 }
 
+fn infer_type() {
+    let example_closure = |x| x;
+
+    let s = example_closure(String::from("hello"));
+    // let n = example_closure(5); // uncomment here: try using a conversion method: `.to_string()`
+
+    // The first time we call `example_closure` with the `String` value, the compiler infers the
+    // type of `x` and the return type of the closure to be `String`. Those types are then locked
+    // into the closure in `example_closure`, and we get a type error when we next try to use
+    // a different type with the same closure.
+}
+
+fn capture_reference() {
+    // Closures can capture values from their environment in three ways, which directly
+    // map to the three ways a function can take a parameter: borrowing immutably, borrowing
+    // mutably, and taking ownership. The closure will decide which of these to use
+    // based on what the body of the function does with the captured values.
+
+    // Closure in Rust is the sugar syntax of trait `Fn`, `FnOnce`, `FnMut`
+
+    // Defining a closure that captures a immutable variable.
+
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {list:?}");  // -> [1, 2, 3]
+
+    let only_borrows = || println!("From closure: {list:?}");
+
+    println!("Before calling closure: {list:?}");   // -> [1, 2, 3]
+    only_borrows();                                 // -> [1, 2, 3]
+    println!("After calling closure: {list:?}");    // -> [1, 2, 3]
+
+    // Defining a closure that captures a mutable variable.
+
+    let mut mut_list = vec![1, 2, 3];
+    println!("Before defining closure: {mut_list:?}");  // -> [1, 2, 3]
+
+    let mut borrows_mutably = || mut_list.push(7);
+
+    borrows_mutably();
+    println!("After calling closure: {mut_list:?}");    // -> [1, 2, 3, 7]
+
+    // If you want to force the closure to take ownership of the values it uses
+    // in the environment even though the body of the closure doesn't strictly
+    // need ownership, you can use the `move` keyword before the parameter list.
+
+    // This technique is mostly useful when passing a closure to a new thread
+    // to move the data so that it's owned by the new thread.
+
+    let thread_list = vec![1, 2, 3];
+    println!("Before defining closure: {thread_list:?}");           // -> [1, 2, 3]
+
+    thread::spawn(move || println!("From thread: {thread_list:?}")) // -> [1, 2, 3]
+        .join()
+        .unwrap();
+
+    // In this example, even though the closure body still only needs an immutable
+    // reference, we need to specify that `thread_list` should be moved into the closure
+    // by putting the `move` keyword at the beginning of the closure definition. The
+    // new thread might finish before the rest of the main thread finishes, or the main
+    // thread might finish first. If the main thread maintained ownership of `thread_list`
+    // but ended before the new thread did and dropped `thread_list`, the immutable
+    // reference in the thread would be invalid. Therefore, the compiler requires that
+    // `thread_list` be moved into the closure given to the new thread so the reference
+    // will be valid.
+
+    // If we lack `move` keyword, Rustc will throw an error E0373: A captured variable
+    // in closure may not live long enough.
+}
+
+// Iterator and closure
+
+fn test_iterator() {
+    let vec1 = vec![1, 2, 3];
+    let vec1_iter = vec1.iter();    // vec1_iter: Iter<'_, i32>
+
+    for val in vec1_iter {
+        println!("Got: {val}");
+    }
+}
+
+
 fn main() {
     let store = Inventory {
         shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
@@ -60,4 +143,23 @@ fn main() {
         user_pref2, giveaway2
     );
     // The user with preference None gets Blue
+
+    // There are more differences between functions and closures. Closures don't
+    // usually require you to annotate the types of the parameters or the return value
+    // like `fn` functions do.
+
+    // Type annotations are required on functions because the types are part of an
+    // explicit interface exposed to users. Closures are typically short and relevant
+    // only within a narrow context rather than in any arbitrary scenario. Within
+    // these limited contexts, the compiler can infer the types of the parameters and
+    // the return type, similar to how it's able to infer the types of most variables.
+
+    let expensive_closure = |num: u32| -> u32 {
+        println!("calculating slowly...");
+        thread::sleep(Duration::from_secs(2));
+        num
+    };
+
+    capture_reference();
+    test_iterator();
 }
