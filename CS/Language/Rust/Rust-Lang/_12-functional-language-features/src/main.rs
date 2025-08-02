@@ -120,6 +120,49 @@ fn test_iterator() {
     for val in vec1_iter {
         println!("Got: {val}");
     }
+
+    let vec2 = vec![0, 1, 2];
+    let mut vec2_iter = vec2.iter();
+    assert_eq!(vec2_iter.next(), Some(&0));
+    assert_eq!(vec2_iter.next(), Some(&1));
+    assert_eq!(vec2_iter.next(), Some(&2));
+    assert_eq!(vec2_iter.next(), None);
+
+    // Calling the `next` method on an iterator changes internal state that the iterator
+    // uses to keep track of where it is in the sequence. In other words, this code
+    // consumes, or uses up, the iterator.
+
+    // Notice that the return value of `next` is an immutable reference. If you want to
+    // create an iterator that takes ownership of `vec2` and returns owned values, we
+    // can call `into_iter` instead of `iter`. Similarly, if we want to iterate over
+    // mutable references, we can call `iter_mut` instead of `iter`.
+
+    let vec3 = vec![0, 1, 2];
+    let vec3_into_iter = vec3.into_iter();  // vec3_into_iter: IntoIter<i32>
+
+    // The vector can not be used after iterating it. It's a consumer iterator.
+
+    let vec4: Vec<i32> = vec![1, 2, 3];
+    let vec5: Vec<i32> = vec4.iter().map(|x| x * x).collect();
+    assert_eq!(vec5, vec![2, 4, 9]);
+}
+
+// Many iterator adapters take closures as arguments, and commonly the closures we'll
+// specify as arguments to iterator adapters will be closures that capture their
+// environment.
+
+#[derive(PartialEq, Debug)]
+struct Shoe {
+    size: u32,
+    style: String,
+}
+
+fn shoes_in_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+    shoes.into_iter().filter(|s| s.size == shoe_size).collect()
+
+    // We call `into_iter` to create an iterator that takes ownership of the vector.
+    // Then we call `filter` to adapt that iterator into a new iterator that only
+    // contains elements for which the closure returns `true`.
 }
 
 
