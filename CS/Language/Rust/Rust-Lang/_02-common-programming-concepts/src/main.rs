@@ -198,6 +198,13 @@ fn function_has_returns(x: i32) -> i32 {
     x + 1
 }
 
+// In rust, *diverging function* is used for a function that will never return. Such
+// as a function that invokes `panic!` macro.
+
+fn diverging_function() -> ! {
+    panic!("This function never returns!");
+}
+
 fn control_flow() {
     let number = 3;
 
