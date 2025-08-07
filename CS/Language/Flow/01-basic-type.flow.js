@@ -129,3 +129,76 @@ const num = thisType.call({ x: 12 }); // num: number
 async function promiseFunction(): Promise<number> {
   return 1;
 }
+
+// Callable objects can be typed
+
+type CallableObject = {
+  (number, number): number;
+  bar: string;
+  ...
+}
+
+function add(x: number, y: number): number {
+  return x + y;
+}
+
+add.bar = "123";
+
+add as CallableObject;
+
+// In general, functions can have properties assigned to them if they are function
+// declarations, or simple variable declarations of the form `const f = () =>`. The
+// properties must be assigned in the format `f.prop = <expr>`. In the same statement
+// list as the function definition.
+
+declare const fn:
+  & ((x: "string") => string)
+  & ((x: "number") => number);
+
+// Use intersection types to define overloaded function types.
+
+const s: string = fn("string");
+const n: number = fn("number");
+
+function useCallback<T: (...$ReadOnlyArray<empty>) => mixed>(
+  callback: T,
+  inputs: ?$ReadOnlyArray<mixed>,
+): T {
+  return callback;
+}
+useCallback((x: string) => true);
+useCallback((x: number) => [1]);
+
+// This type `(...$ReadOnlyArray<empty>) => mixed` represents for any function. Notice
+// type `Function` is just an alias for `any` and it's unsafe.
+
+// Interfaces are separate from object types, only they can describe instances of classes.
+
+interface TestInterface {
+  bar: string;
+  foo: number;
+}
+
+// You can add variance annotations to object types. To mark a property as read-only,
+// you can use the `+`:
+
+type ReadOnlyArray<T> = {
+  +[index: number]: T;
+  ...
+}
+
+const testReadOnlyArray: ReadOnlyArray<number> = {};
+// $FlowExpectedError[cannot-write]
+testReadOnlyArray[0] = 2;
+
+// You can also mark a property as write-only, you can use the `-`:
+
+type WriteOnlyArray<T> = {
+  -[index: number]: T;
+  ...
+}
+
+const testWriteOnlyArray: WriteOnlyArray<number> = {};
+// $FlowExpectedError[cannot-read]
+const testRead = testWriteOnlyArray[0];
+testWriteOnlyArray[0] = 12;
