@@ -202,3 +202,71 @@ const testWriteOnlyArray: WriteOnlyArray<number> = {};
 // $FlowExpectedError[cannot-read]
 const testRead = testWriteOnlyArray[0];
 testWriteOnlyArray[0] = 12;
+
+// Exact object types are the default, unless you have set `exact_byy_default=false`
+// in your `.flowconfig`. If you do this, you can denote exact object types like below:
+
+type ExactObject = {|
+  foo: string;
+  bar: number;
+|}
+
+// If you want to combine exact object types, use *object type spread*:
+
+type CombineTypeA = {|
+  foo: string;
+|}
+
+type CombineTypeB = {|
+  bar: number;
+|}
+
+type TestCombineA = {
+  ...CombineTypeA;
+  ...CombineTypeB;
+}
+
+type TestCombineB = CombineTypeA & CombineTypeB;
+
+const testCombineObjectA: TestCombineA = {
+  foo: "This is a test",
+  bar: 19,
+};
+
+// $FlowExpectedError[prop-missing]
+const testCombineObjectB: TestCombineB = {
+  foo: "This is a test",
+  bar: 19,
+};
+
+// Notice if you want to spread inexact object type, the resulting object must also
+// be inexact too.
+
+type SpreadInexactOrigin = {
+  foo: string;
+  ...
+}
+
+type SpreadInexactTargetA = {
+  // $FlowExpectedError[incompatible-exact]
+  ...SpreadInexactOrigin;
+  bar: number;
+}
+
+type SpreadInexactTargetB = {
+  ...SpreadInexactOrigin;
+  bar: number;
+  ...
+}
+
+// The same issue exists with objects with indexers, as they can also have unknown keys:
+
+type Dict = {
+  [string]: number;
+}
+
+// $FlowExpectedError[cannot-spread-indexer]
+type SpreadInexactTargetC = {
+  bar: number;
+  ...Dict;
+}
