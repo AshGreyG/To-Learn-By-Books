@@ -7,3 +7,5 @@
 **/.wake
 
 *.class
+
+*.out
