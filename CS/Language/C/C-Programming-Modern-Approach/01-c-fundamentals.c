@@ -16,6 +16,15 @@
 //   executable program. This additional code includes library functions that
 //   are used in program.
 
+#define THIS_IS_CONSTANT 134
+
+// `#define` is a preprocessing directive, just as `#include` is, so there's
+// no semicolon at the end of the line. When a program is compiled, the
+// preprocessor replaces each macro by the value that it represents.
+
+// int weight = THIS_IS_CONSTANT * 3 + THIS_IS_CONSTANT - 1 =>
+// int weight = 134 * 3 + 134 - 1
+
 int main(void) {
     printf("To C, or not to C: that is the question.\n");
 
@@ -34,7 +43,21 @@ int main(void) {
     printf("Distance: %.2f (2 digits)\n", distance);        // => 3.13
     printf("Distance: %.9f (9 digits)\n", distance);        // => 3.129869938
 
+    // Some variables are automatically set to zero when a program begins to
+    // execute, but most are not. A variable that doesn't have a default value
+    // and hasn't yet been assigned a value by the program is said to be
+    // *uninitialized*.
+
+    // To obtain input, we'll use the `scanf` function (f stands for formatted),
+    // both `printf` and `scanf` require the use of a *format string* to specify
+    // the appearance of the input or output data.
+
+    int input_integer;
+    scanf("%d", &input_integer);
+    printf("Input is %d", input_integer);
+
     return 0;
+    // Return statement in main function is equivalent to `exit(...)`.
 }
 
 // Use `cc <name>.c` to leave the executable program in a file named `a.out` by
@@ -42,4 +65,4 @@ int main(void) {
 // containing the executable program.
 
 // Main function returns a status code that is given to the OS when the program
-// terminates.
+// terminates..
