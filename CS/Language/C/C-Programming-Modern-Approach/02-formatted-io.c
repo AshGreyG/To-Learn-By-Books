@@ -96,4 +96,6 @@ int main(void) {
 
     // If `printf` encounters two consecutive `%` characters in a format string, it prints
     // a single `%` character.
+
+    return 0;
 }
