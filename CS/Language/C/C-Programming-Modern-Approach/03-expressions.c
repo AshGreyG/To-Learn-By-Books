@@ -37,6 +37,8 @@ int main(void) {
     // result of a computation. Variables are lvalue, expressions like 10 or 2 * i 
     // are not.
 
+    // C also has `rvalue` but we call it as "expression".
+
     // 10 = chain_1;   // uncomment here [Expression is not assignable]
 
     // C's **compound assignment** operators allow us to shorten this statement and
@@ -64,6 +66,18 @@ int main(void) {
 
     printf("The value of chain_1 (postfix)  when decrement: %d\n", chain_1--);   // => 38
     printf("The value of chain_1 (postfix) after decrement: %d\n", chain_1);     // => 37
+
+    // According to the C standard, statements such as `c = (b = a + 2) - (a = 1)` and
+    // `j = i * i++` cause *undefined behavior*
+
+    // C has the unusual rule that any expression can be used as a statement. That is, any
+    // expression (regardless of its type or what it computes) can be turned into a
+    // statement by appending a semicolon.
+
+    chain_1 * chain_1;  // Expression result unused
+
+    // Decrement and increment expression has side effects but a "do-nothing" expression
+    // statements may be warned by LSP or compiler.
 
     return 0;
 }
