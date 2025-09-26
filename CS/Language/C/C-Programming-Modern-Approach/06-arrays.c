@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define length(a) ((int) (sizeof(a) / sizeof(a[0])))
 
@@ -178,6 +179,20 @@ int main(void) {
     // The array in this program is an example of a *variable-length-arrray*
     // or VLA for short. The length of a VLA is computed when the program is
     // executed not when the program is compiled.
+
+    // If we want to copy an array into another, we can't use assignment.
+    // Actually programmers often use `memcpy` function to do so (it's from
+    // <string.h> header and is quite loe-level):
+
+    int copy_from[30], copy_to[30];
+
+    for (int i = 0; i < length(copy_from); ++i)
+        copy_from[i] = (i + 1) * (i + 1);
+
+    memcpy(copy_to, copy_from, sizeof(copy_to));
+
+    for (int i = 0; i < length(copy_to); ++i)
+        printf("%d ", copy_to[i]);
 
     return 0;
 }
