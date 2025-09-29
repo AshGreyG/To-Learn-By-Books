@@ -177,7 +177,6 @@ double calculate(double a, double b, char op) {
 }
 
 void print_stack_state(Stack *op_stack, Stack *num_stack) {
-    print_repeated("=", 80);
     print_repeated("\n", 0);
     printf("→ Operation Stack: ");
     print_stack_op(op_stack);
@@ -185,7 +184,6 @@ void print_stack_state(Stack *op_stack, Stack *num_stack) {
     printf("→ Number Stack:    ");
     print_stack_num(num_stack);
     print_repeated("\n", 1);
-    print_repeated("=", 80);
 }
 
 double calculate_expression(char *expr) {
