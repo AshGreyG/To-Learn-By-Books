@@ -112,11 +112,7 @@ int main(void) {
 
     int multi_dim[MULTIPLE_ROWS][MULTIPLE_COLS] = {{ 0 }};
 
-    for (
-        int *p = &multi_dim[0][0];
-        p <= &multi_dim[MULTIPLE_ROWS - 1][MULTIPLE_COLS - 1];
-        ++p
-    ) {
+    for (int *p = &multi_dim[0][0]; p <= &multi_dim[MULTIPLE_ROWS - 1][MULTIPLE_COLS - 1]; ++p) {
         *p = 1;
     }
 
