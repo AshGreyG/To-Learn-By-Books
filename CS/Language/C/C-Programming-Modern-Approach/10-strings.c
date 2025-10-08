@@ -27,7 +27,7 @@ void string_header_test(void) {
     print_repeated("=", 30);
 
     // `strncpy` is similar to `strcpy` but has a third argument that limits
-    // the number of characters that will be copied
+    // the number of characters that will be copied,
 
     char test_strncpy1[20], test_strncpy2[10];
     print_repeated("\n", 3);
@@ -110,7 +110,6 @@ int main(void) {
         "// when two or more string literals are adjacent (separated only by white\n"
         "// spaces), the compiler will join them into a single string.\n"
     );
-
     // C treats string literals as character arrays, when a C compiler encounters
     // a string literal of length `n` in a program, it sets aside `n + 1` bytes
     // of memory for the string. This area of memory will contain the characters
@@ -161,3 +160,16 @@ int main(void) {
 
     return 0;
 }
+
+// When we run a program, we'll often need to supply it with information:
+// Command-line information is available to all programs, to obtain access to
+// these *command-line arguments* (*program arguments*), we must define `main`
+// function with two parameters:
+
+// int main(int argc, char *argv[]);
+//
+// + argc: *argument count*, is the number of command-line arguments (including
+//   the name of the program itself)
+// + argv: *argument vector*, is an array of pointers to the name of the program
+//   it has one additional element, `argv[argc]` which is always a *null pointer*
+//   a special pointer that points to nothing
