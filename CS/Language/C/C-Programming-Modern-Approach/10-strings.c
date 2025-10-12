@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define length(a) (int)(sizeof(a) / sizeof(a[0]))
+#define LENGTH(a) (int)(sizeof(a) / sizeof(a[0]))
 
 void print_repeated(const char *repeated, int times) {
     for (int i = 0; i < times; ++i)
@@ -126,7 +126,7 @@ int main(void) {
     // considers it as a special array initializer.
 
     char string_variable_array[] = "Automatically compute the length";
-    printf("%d\n", length(string_variable_array)); // => 33
+    printf("%d\n", LENGTH(string_variable_array)); // => 33
 
     string_variable_array[2] = '&';
     printf("Change string (array   version): %s\n", string_variable_array);

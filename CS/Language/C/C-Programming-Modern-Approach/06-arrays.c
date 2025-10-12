@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define length(a) ((int) (sizeof(a) / sizeof(a[0])))
+#define LENGTH(a) ((int) (sizeof(a) / sizeof(a[0])))
 
 void print_repeated(char* repeated, int times) {
     for (int i = 0; i < times; ++i) {
@@ -91,7 +91,7 @@ int main(void) {
     );
     // => 4
 
-    for (int i = 0; i < length(without_length); ++i) {
+    for (int i = 0; i < LENGTH(without_length); ++i) {
         printf("%d ", without_length[i]);   // => 1, 2, 3, 4
     }
     printf("\n");
@@ -105,8 +105,8 @@ int main(void) {
 
     print_repeated("=", 134);
     printf("\n");
-    for (int i = 0; i < length(two_dimensions); ++i) {
-        for (int j = 0; j < length(two_dimensions[0]); ++j) {
+    for (int i = 0; i < LENGTH(two_dimensions); ++i) {
+        for (int j = 0; j < LENGTH(two_dimensions[0]); ++j) {
             printf("%p ", &two_dimensions[i][j]);
         }
         printf("\n");
@@ -186,12 +186,12 @@ int main(void) {
 
     int copy_from[30], copy_to[30];
 
-    for (int i = 0; i < length(copy_from); ++i)
+    for (int i = 0; i < LENGTH(copy_from); ++i)
         copy_from[i] = (i + 1) * (i + 1);
 
     memcpy(copy_to, copy_from, sizeof(copy_to));
 
-    for (int i = 0; i < length(copy_to); ++i)
+    for (int i = 0; i < LENGTH(copy_to); ++i)
         printf("%d ", copy_to[i]);
 
     return 0;

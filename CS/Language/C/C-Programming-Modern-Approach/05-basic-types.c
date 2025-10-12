@@ -6,7 +6,7 @@
 // Working at compile-time, from
 // https://stackoverflow.com/a/28897994/23178151
 
-#define typename(var) _Generic((var),                \
+#define TYPENAME(var) _Generic((var),               \
     char: "char",                                   \
     unsigned char: "unsigned char",                 \
     short int: "short",                             \
@@ -225,15 +225,15 @@ int main(void) {
     double test_double;
     long double test_long_double;
 
-    printf("%-20s + %-20s = %-20s\n", "char",          "short int",     typename(test_char + test_short));
-    printf("%-20s + %-20s = %-20s\n", "int",           "char",          typename(test_int + test_char));
-    printf("%-20s + %-20s = %-20s\n", "int",           "short int",     typename(test_int + test_short));
-    printf("%-20s + %-20s = %-20s\n", "unsigned int",  "int",           typename(test_unsigned_int + test_int));
-    printf("%-20s + %-20s = %-20s\n", "long",          "unsigned int",  typename(test_long + test_unsigned_int));
-    printf("%-20s + %-20s = %-20s\n", "unsigned long", "long",          typename(test_unsigned_long + test_long));
-    printf("%-20s + %-20s = %-20s\n", "float",         "unsigned long", typename(test_float + test_unsigned_long));
-    printf("%-20s + %-20s = %-20s\n", "double",        "float",         typename(test_double + test_float));
-    printf("%-20s + %-20s = %-20s\n", "long double",   "double",        typename(test_long_double + test_double));
+    printf("%-20s + %-20s = %-20s\n", "char",          "short int",     TYPENAME(test_char + test_short));
+    printf("%-20s + %-20s = %-20s\n", "int",           "char",          TYPENAME(test_int + test_char));
+    printf("%-20s + %-20s = %-20s\n", "int",           "short int",     TYPENAME(test_int + test_short));
+    printf("%-20s + %-20s = %-20s\n", "unsigned int",  "int",           TYPENAME(test_unsigned_int + test_int));
+    printf("%-20s + %-20s = %-20s\n", "long",          "unsigned int",  TYPENAME(test_long + test_unsigned_int));
+    printf("%-20s + %-20s = %-20s\n", "unsigned long", "long",          TYPENAME(test_unsigned_long + test_long));
+    printf("%-20s + %-20s = %-20s\n", "float",         "unsigned long", TYPENAME(test_float + test_unsigned_long));
+    printf("%-20s + %-20s = %-20s\n", "double",        "float",         TYPENAME(test_double + test_float));
+    printf("%-20s + %-20s = %-20s\n", "long double",   "double",        TYPENAME(test_long_double + test_double));
     
     // char                 + short int            = int                 
     // int                  + char                 = int                 

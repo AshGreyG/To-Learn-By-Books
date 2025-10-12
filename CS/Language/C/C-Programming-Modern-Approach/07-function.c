@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define length(a) ((int) (sizeof(a) / sizeof(a[0])))
+#define LENGTH(a) ((int) (sizeof(a) / sizeof(a[0])))
 
 // This is the *return type* of this function
 // ↓
@@ -64,7 +64,7 @@ double prototype_param_no_name(double, double);
 // it:
 
 void array_param(int arr[]) {
-    printf("The length of passed-in is: %d\n", length(arr));
+    printf("The length of passed-in is: %d\n", LENGTH(arr));
 
     // Sizeof array function parameter will return size of `int*` not `int[]`.
 }

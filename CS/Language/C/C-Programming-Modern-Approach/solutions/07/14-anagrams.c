@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define length(a) ((int) (sizeof(a) / sizeof(a[0])))
+#define LENGTH(a) ((int) (sizeof(a) / sizeof(a[0])))
 
 int main(void) {
     while (true) {
@@ -27,14 +27,14 @@ int main(void) {
         }
 
         int i;
-        for (i = 0; i < length(count_distance); ++i) {
+        for (i = 0; i < LENGTH(count_distance); ++i) {
             if (count_distance[i] != 0) {
                 printf("The words are not anagrams.\n\n");
                 break;
             }
         }
 
-        if (i == length(count_distance)) {
+        if (i == LENGTH(count_distance)) {
             printf("The words are anagrams.\n\n");
         }
     }
