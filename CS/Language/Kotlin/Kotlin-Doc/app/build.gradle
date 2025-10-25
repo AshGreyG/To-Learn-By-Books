@@ -40,7 +40,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'documentation.variable.MainKt'
+    mainClass = 'documentation.control.MainKt'
 }
 
 tasks.named('test') {
