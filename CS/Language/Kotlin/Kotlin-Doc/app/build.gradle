@@ -40,7 +40,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'documentation.classes.MainKt'
+    mainClass = 'documentation.intermediate.MainKt'
 }
 
 tasks.named('test') {
