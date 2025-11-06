@@ -72,27 +72,27 @@ StructuredType return_structured_type(void) {
 // members, which overlay each other within this space.
 
 typedef struct CatalogItem {
-  int stock_number;
-  double price;
-  int item_type;
+    int stock_number;
+    double price;
+    int item_type;
 
-  union {
-    struct {
-      char title[100];
-      char author[30];
-      int num_pages;
-    } book;
+    union {
+        struct {
+            char title[100];
+            char author[30];
+            int num_pages;
+        } book;
 
-    struct {
-      char design[100];
-    } mug;
+        struct {
+            char design[100];
+        } mug;
 
-    struct {
-      char design[100];
-      int colors;
-      int sizes;
-    } shirt;
-  } item;
+        struct {
+            char design[100];
+            int colors;
+            int sizes;
+        } shirt;
+    } item;
 } CatalogItem;
 
 // In many programs, we'll need variables that have only a small set of
@@ -101,14 +101,14 @@ typedef struct CatalogItem {
 // is a type whose values are listed by the programmer.
 
 enum {
-  GREEN,
-  RED,
-  BLUE
+    GREEN,
+    RED,
+    BLUE
 } color;
 
 enum UnionNumberType {
-  INTEGER,
-  DOUBLE
+    INTEGER,
+    DOUBLE
 };
 
 // C treats enumeration variables and constants as integers. By default the
@@ -182,26 +182,26 @@ int main(void) {
     // any uninitialized members default to zero.
 
     union {
-      int id;
-      long newId;
+        int id;
+        long newId;
     } user_with_union_id;
 
     // The members of structure are stored at *different* address in memory,
     // while the members of union are stored at the *same* address
 
     {
-      user_with_union_id.id = 0x1eef;
-      printf(
-          "Address of field `id` in `user_with_union_id`:    %p\n",
-          &user_with_union_id.id
-      );
+        user_with_union_id.id = 0x1eef;
+        printf(
+            "Address of field `id` in `user_with_union_id`:    %p\n",
+            &user_with_union_id.id
+        );
     }
     {
-      user_with_union_id.newId = 0xa78bbc41;
-      printf(
-          "Address of field `newId` in `user_with_union_id`: %p\n",
-          &user_with_union_id.newId
-      );
+        user_with_union_id.newId = 0xa78bbc41;
+        printf(
+            "Address of field `newId` in `user_with_union_id`: %p\n",
+            &user_with_union_id.newId
+        );
     }
 
     // Thus if we store a value in `user_with_union_id.id` then the value of
@@ -212,30 +212,30 @@ int main(void) {
     // contain a mixture of data of different types
 
     typedef struct {
-      enum UnionNumberType kind; // Tag field
+        enum UnionNumberType kind; // Tag field
     
-      union {
-        int number_int;
-        double number_double;
-      } value;
+        union {
+            int number_int;
+            double number_double;
+        } value;
     } Number;
 
     Number union_number_array[10];
 
     for (int i = 0; i < LENGTH(union_number_array); ++i) {
-      if (i % 2 == 0) {
-        union_number_array[i].kind = INTEGER;
-        union_number_array[i].value.number_int = i;
-      } else {
-        union_number_array[i].kind = DOUBLE;
-        union_number_array[i].value.number_double = (double)(i * 0.1);
-      }
+        if (i % 2 == 0) {
+            union_number_array[i].kind = INTEGER;
+            union_number_array[i].value.number_int = i;
+        } else {
+            union_number_array[i].kind = DOUBLE;
+            union_number_array[i].value.number_double = (double)(i * 0.1);
+        }
     }
     for (int i = 0; i < LENGTH(union_number_array); ++i) {
-      if (union_number_array[i].kind == INTEGER)
-        printf("%d ",  union_number_array[i].value.number_int);
-      else
-        printf("%lf ", union_number_array[i].value.number_double);
+        if (union_number_array[i].kind == INTEGER)
+            printf("%d ",  union_number_array[i].value.number_int);
+        else
+            printf("%lf ", union_number_array[i].value.number_double);
     }
 
     return 0;
