@@ -1,6 +1,15 @@
 #include <stdbool.h>
 #include <string.h>
 
+// C compilers usually provide some method of specifying the value of a macro
+// at the time a program is compiled. This ability makes it easy to change the
+// value of a macro without editing any of the program's files.
+//
+// Most compilers support the -D option, which allows the value of a macro to
+// be specified on the command line.
+//
+// gcc -DDEBUG=1 foo.c   (that's to write `#define DEBUG 1`)
+
 #include "line.h"
 #include "word.h"
 #include "log.h"

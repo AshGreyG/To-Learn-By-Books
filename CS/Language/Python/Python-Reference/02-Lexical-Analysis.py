@@ -29,4 +29,19 @@ if 1900 < year < 2100 and 1 <= month <= 12 and \
         ))
 
 # A line ending in a backslash cannot carry a comment. A backslash does not continue
-# a comment
+# a comment. Expressions in parentheses, square brackets or curly braces can be split
+# over more than one physical line without using backslashes, for example
+
+month_names = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+]
+
+# Leading whitespace (space or tab) at the beginning of a logical line is used to
+# compute the indention level of the line, which in turn is used to determine the
+# grouping of statements.
+
+# Indention is rejected as inconsistent if a source file mixes tabs and spaces in
+# a way that makes the meaning dependent on the worth of a tab in spaces, a
+# `TabError` is raised in that case.

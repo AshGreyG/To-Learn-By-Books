@@ -53,12 +53,12 @@ bubble-sort(list, fn = null)
       return a > b
     }
 
-  for $i in 1...length(list)
-    for $j in 0...$i
-      if fn(list[$j], list[$i])
-        $temp = list[$i]
-        list[$i] = list[$j]
-        list[$j] = $temp
+  for i in 1...length(list)
+    for j in 0...i
+      if fn(list[j], list[i])
+        temp = list[i]
+        list[i] = list[j]
+        list[j] = temp
 
   return list
 
@@ -78,3 +78,47 @@ test-arguments()
 
 .foo
   content-arguments: test-arguments(1, 2, 3, 4, 5)  // 15
+
+// Stylus supports keyword arguments or "kwargs", these allow you to reference
+// arguments by their associated parameters name. The order of parameters is not
+// important.
+
+body
+  color: rgba(red: 255, green: 200, blue: 100, alpha: 0.5)
+  color: rgba(green: 255, red: 200, blue: 100, alpha: 0.5)
+
+// To see what parameters a function or mixin accept, use the `p()` function
+
+.foo
+  content-p-function-1: p(rgba) == null ? "It prints to console" : p(rgba)
+  content-p-function-2: p(typeof) == null ? "It prints to console" : p(typeof)
+
+  // They are printed to console:
+  // inspect: rgba(red, green, blue, alpha)
+  // inspect: typeof(node)
+
+// Built-in functions (BIF)
+
+p(red(#c00))        // 204
+p(red(#000, 255))   // #f00
+
+// `alpha`, `green` or `blue` are similar to `red` function, it receives a color 
+// value and an optional second component value. When there is only color value, 
+// it returns corresponding color component. When there is the second parameter, 
+// it sets the corresponding color component of first parameter with the second 
+// parameter.
+
+p(dark)           // dark(color)
+p(dark(black))    // true
+p(dark(red))      // false
+p(dark(#005716))  // true
+
+p(light)          // light(color)
+p(light(black))   // false
+p(light(red))     // true
+p(light(#00ff40)) // true
+
+p(hsla)                       // hsla(hue, saturation, lightness, alpha)
+p(hsla(10deg, 50%, 30%, 0.5)) // hsla(10,50%,30%,0.5)
+p(hsla(#ffcc00))              // hsla(48,100%,50%,1)
+

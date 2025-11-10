@@ -1,4 +1,5 @@
 **/target
+**/test
 **/.vscode
 *.svg
 
@@ -9,3 +10,6 @@
 *.class
 
 *.out
+
+**/word.md
+# This file is the new word lists when I read books.

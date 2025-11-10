@@ -133,8 +133,8 @@ structure Point3D where
   z : Float
 deriving Repr
 
-#check ({ x := 0.0, y := 0.0} : Point)
-#check { x := 0.0, y := 0.0 : Point}
+#check ({ x := 0.0, y := 0.0 } : Point)
+#check { x := 0.0, y := 0.0 : Point }
 
 -- To make programs more concise, Lean also allows the structure type annotation inside
 -- the curly braces.
@@ -189,7 +189,7 @@ deriving Repr
 def Point.modifyBoth (f : Float → Float) (p : Point) : Point :=
   { x := f p.x, y := f p.y }
 
-#eval { x := 3.45, y := 9.87 : Point}.modifyBoth Float.floor  -- { x := 3.000000, y := 9.000000}
+#eval { x := 3.45, y := 9.87 : Point }.modifyBoth Float.floor  -- { x := 3.000000, y := 9.000000}
 
 structure RectangularPrism where
   height : Float
@@ -521,7 +521,7 @@ def List.findFirst? {α : Type} (xs : List α) (predicate : α → Bool) : Optio
 def Prod.switch {α β : Type} (pair : α × β) : β × α :=
   { fst := pair.snd, snd := pair.fst }
 
-#eval { fst := 3, snd := "3" : Nat × String}.switch -- ("3", 3)
+#eval { fst := 3, snd := "3" : Nat × String }.switch -- ("3", 3)
 
 def List.myZip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
   match xs with
