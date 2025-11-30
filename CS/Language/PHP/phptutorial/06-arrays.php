@@ -29,7 +29,6 @@ echo count($testAppend) . "\n";
 foreach ($testAppend as $element) {
   echo "{$element} ";
 }
-echo "\n";
 
 // In each iteration PHP assigns the next array element to the $element variable.
 // If the PHP reaches the last element the loop ends.
