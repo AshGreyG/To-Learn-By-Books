@@ -12,7 +12,7 @@ end;
 architecture asynchronous of flopenr is
 begin
   process(clk, reset) begin
-    if reset then
+    if reset = '1' then
       q <= "0000";
     elsif rising_edge(clk) then
       if en then

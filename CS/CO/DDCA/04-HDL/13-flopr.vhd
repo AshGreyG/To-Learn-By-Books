@@ -15,7 +15,7 @@ begin
     -- comma. The name of these architectures are 'asynchronous' and 'synchronous'
     -- is ignored by VHDL tools but may be helpful to the human reading the code.
 
-    if reset then
+    if reset = '1' then
       q <= "0000";
     elsif rising_edge(clk) then
       q <= d;
