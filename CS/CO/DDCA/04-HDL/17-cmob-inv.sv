@@ -5,8 +5,8 @@
 // but is preferred in System Verilog
 //
 // The '=' in the always statement is called a **blocking assignment**. It's a
-// good practice to use blocking assignments for combination logic and non-block
-// ing assignments for combinational logic.
+// good practice to use blocking assignments for combination logic and non-blocking 
+// assignments for sequential logic.
 
 module combination_inv (
   input  logic [3:0] a,
