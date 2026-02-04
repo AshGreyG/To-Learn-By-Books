@@ -15,4 +15,7 @@ begin
   process(all) begin
     y <= not a;
   end process;
+
+  -- In a VHDL 'process' statement, ':=' indicates a blocking assignment and <=
+  -- indicates a non-blocking assignment.
 end;
